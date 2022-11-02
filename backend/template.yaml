@@ -1,0 +1,473 @@
+# This is the SAM template that represents the architecture of your serverless application
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-template-basics.html
+
+# The AWSTemplateFormatVersion identifies the capabilities of the template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  NFTsGallery
+
+# Transform section specifies one or more macros that AWS CloudFormation uses to process your template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
+Transform:
+  - "AWS::Serverless-2016-10-31"
+
+# Resources declares the AWS resources that you want to include in the stack
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Tracing: Active
+    Timeout: 10
+    Runtime: nodejs16.x
+
+  Api:
+    Cors:
+      AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+      AllowOrigin: "'*'"
+      AllowMethods: "'OPTIONS,GET,POST'"
+    Auth:
+      InvokeRole: NONE
+      AddDefaultAuthorizerToCorsPreflight: false
+    GatewayResponses:
+      DEFAULT_4XX:
+        ResponseParameters:
+          Headers:
+            Access-Control-Allow-Origin: "'*'"
+            Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            Access-Control-Allow-Methods: "'OPTIONS,GET,POST'"
+      DEFAULT_5XX:
+        ResponseParameters:
+          Headers:
+            Access-Control-Allow-Origin: "'*'"
+            Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            Access-Control-Allow-Methods: "'OPTIONS,GET,POST'"
+
+Parameters:
+  AlchemyEthUrl:
+    Type: String
+    Description: "The Alchemy URL containing the API Key. Used for HTTP proxy calls through API Gateway. Don't include trailing '/'. Format: https://eth-mainnet.g.alchemy.com/v2/kMJgN17xxxxxxxxxxxxxxx-xxxxxxxxx"
+  AlchemyEthAPIKey:
+    Type: String
+    Description: "The Alchemy ETH API Key. Used by the Lambda function to call Alchemy. Format: kMJgN17xxxxxxxxxxxxxxx-xxxxxxxxx"
+
+Resources:
+  # To force a redeployment of the API Gateway stage, change the number at the end of this resources name 'NFTsGalleryApiDeployment${randomNumber}'
+  # SAM will create this deployment resource only the first time
+  # If you change the API definition or a mapping template, you will need to force redeploy the stage
+  # This can also be done through CLI, CI/CD pipeline, SDK or in the console.
+  # If you have problem. Delete the stack and recreate it OR make the change by hand in the AWS console and re-deploy the API by hand.
+  NFTsGalleryApiDeployment19:
+    DependsOn:
+      - GetNFTsAlchemyOPTIONSMethod
+      - GetNFTsAlchemyGETMethod
+    Type: "AWS::ApiGateway::Deployment"
+    Properties:
+      RestApiId: !Ref NFTsGalleryApi
+      Description: Prod stage for NFT API
+      StageName: prod
+
+  # Our Serverless::API REST API Gateway
+  NFTsGalleryApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - Api
+      StageName: prod
+      Description: NFT Gallery API Gateway
+      Auth:
+        DefaultAuthorizer: MyCognitoAuthorizer
+        Authorizers:
+          MyCognitoAuthorizer:
+            UserPoolArn: !GetAtt CognitoUserPool.Arn
+            Identity:
+              Header: Authorization
+
+  # Cognito authorizer which will check our ID Token and grant authenticated users access to our API methods
+  NFTGalleryAPICognitoAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      IdentitySource: method.request.header.Authorization
+      Name: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - CognitoAuthorizer
+      RestApiId: !Ref NFTsGalleryApi
+      Type: COGNITO_USER_POOLS
+      ProviderARNs:
+        - !GetAtt CognitoUserPool.Arn
+
+  # Model used in the mapping template to return an empty JSON body
+  EmptyModel:
+    Type: AWS::ApiGateway::Model
+    Properties:
+      ContentType: "application/json"
+      RestApiId: !Ref NFTsGalleryApi
+      Schema: {}
+
+  ##
+  ## API Methods and lambda functions
+  ##
+
+  # Protected API Method executing a Lambda function
+  GetFromLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - getFromLambdaFunction
+      Handler: src/handlers/getFromLambda.handler
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Environment:
+        Variables:
+          ALCHEMY_ETH_API_KEY: !Ref AlchemyEthAPIKey
+      Description: Test Lambda for authenticated API calls. Logs context and event. Can be called only with Authenticated Role
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /getFromLambda
+            Method: GET
+            RestApiId: !Ref NFTsGalleryApi # We attach our Lambba to our existing API
+
+  # A resource /getNFTsAlchemy
+  GetNFTsAlchemyResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref NFTsGalleryApi
+      ParentId: !GetAtt NFTsGalleryApi.RootResourceId
+      PathPart: getNFTsAlchemy
+
+  # Public API OPTIONS method to /getNFTs  (to allow CORS)
+  GetNFTsAlchemyOPTIONSMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId: !Ref NFTsGalleryApi
+      ResourceId: !Ref GetNFTsAlchemyResource
+      HttpMethod: OPTIONS
+      Integration:
+        Type: MOCK
+        PassthroughBehavior: NEVER
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            ResponseTemplates:
+              application/json: ""
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseModels:
+            application/json: !Ref EmptyModel
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+
+  # Protected API GET method to /getNFTs from Alchemy. Passthrough API Gateway Proxy. No Lambda.
+  GetNFTsAlchemyGETMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref NFTsGalleryApi
+      ResourceId: !Ref GetNFTsAlchemyResource
+      HttpMethod: GET
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref NFTGalleryAPICognitoAuthorizer
+      Integration:
+        Type: HTTP
+        IntegrationHttpMethod: GET
+        PassthroughBehavior: NEVER
+        # We inject the Alchemy URL containing the API Key from our prod.parameters file
+        Uri: !Join
+          - "/"
+          - - !Ref AlchemyEthUrl
+            - getNFTs
+        RequestTemplates:
+          application/json: |
+            #set($address = $context.authorizer.claims['cognito:username'])
+            #set($context.requestOverride.querystring.owner = $address)
+            $input.json("$")
+        IntegrationResponses:
+          - StatusCode: "200"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          - StatusCode: "500"
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+      MethodResponses:
+        - StatusCode: "200"
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+        - StatusCode: "500"
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: false
+            method.response.header.Access-Control-Allow-Methods: false
+            method.response.header.Access-Control-Allow-Origin: false
+
+  ##
+  ## Lambda triggers for custom auth
+  ##
+
+  DefineAuthChallengeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - DefineAuthChallengeFunction
+      Handler: src/handlers/defineAuthChallenge.handler
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Description: Lambda function - Cognito Trigger to define Auth Challenge
+      Events:
+        CognitoEvent:
+          Type: Cognito
+          Properties:
+            UserPool: !Ref CognitoUserPool
+            Trigger: DefineAuthChallenge
+
+  CreateAuthChallengeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - CreateAuthChallengeFunction
+      Handler: src/handlers/createAuthChallenge.handler
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Description: Lambda function - Cognito Trigger to creates Auth Challenge
+      Events:
+        CognitoEvent:
+          Type: Cognito
+          Properties:
+            UserPool: !Ref CognitoUserPool
+            Trigger: CreateAuthChallenge
+
+  VerifyAuthChallengeResponseFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - VerifyAuthChallengeResponseFunction
+      Handler: src/handlers/verifyAuthChallengeResponse.handler
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Description: Lambda function - Cognito Trigger to verify Auth Challenge response
+      Events:
+        CognitoEvent:
+          Type: Cognito
+          Properties:
+            UserPool: !Ref CognitoUserPool
+            Trigger: VerifyAuthChallengeResponse
+
+  PreSignUpFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - PreSignupFunction
+      Handler: src/handlers/preSignUp.handler
+      Architectures:
+        - x86_64
+      MemorySize: 256
+      Description: Lambda function - Cognito Trigger before signup
+      Events:
+        CognitoEvent:
+          Type: Cognito
+          Properties:
+            UserPool: !Ref CognitoUserPool
+            Trigger: PreSignUp
+
+  ##
+  ## Cognito
+  ##
+
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 30
+          RequireLowercase: false
+          RequireNumbers: false
+          RequireSymbols: false
+          RequireUppercase: false
+      UserPoolName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - UserPool
+
+  CognitoUserPoolWebClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - UserPoolWebClient
+      GenerateSecret: false
+      UserPoolId: !Ref CognitoUserPool
+      ExplicitAuthFlows:
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_CUSTOM_AUTH
+      PreventUserExistenceErrors: ENABLED
+
+  # Authentication and Authorization - Cognito IdentityPool
+  CognitoIdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities: true
+      IdentityPoolName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - IdentityPool
+      CognitoIdentityProviders:
+        - ClientId: !Ref CognitoUserPoolWebClient
+          ProviderName: !GetAtt CognitoUserPool.ProviderName
+
+  # Associate roles to Cognito identity pool
+  CognitoIdentityPoolRolesMapping:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    Properties:
+      IdentityPoolId: !Ref CognitoIdentityPool
+      Roles:
+        authenticated: !GetAtt CognitoAuthorizedRole.Arn
+        unauthenticated: !GetAtt CognitoUnAuthorizedRole.Arn
+
+  ##
+  ## IAM Roles
+  ##
+
+  # Placeholder IAM Role
+  # Because we use the Cognito IdentityPool for temporary credentials and accept anonymous users we have two roles:
+  #    - CognitoAuthorizedRole
+  #    - CognitoUnAuthorizedRole
+  #
+  # The CognitoUnAuthorizedRole is used by anonymous users to get authorization to connect to the API
+  # API Gateway method accepting anonymous access must use the AWS_IAM authorization method to use this role.
+  #
+  # API methods that require authorization are instead using the COGNITO_USER_POOLS authorization type
+  # This authorization type allows us to get the Cognito user identity token which contains the user wallet address
+  # We can safely authenticate the user and interact with our backend on the user's behalf.
+  #
+  # We don't use the CognitoAuthorizedRole because we can't customize the claims and pass user ID Token (wallet address)
+  CognitoAuthorizedRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - CognitoAuthorizedRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Federated: "cognito-identity.amazonaws.com"
+            Action:
+              - "sts:AssumeRoleWithWebIdentity"
+            Condition:
+              StringEquals:
+                "cognito-identity.amazonaws.com:aud": !Ref CognitoIdentityPool
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": authenticated
+          - Effect: "Allow"
+            Principal:
+              Service: "apigateway.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Policies:
+        - PolicyName: !Join
+            - "-"
+            - - !Ref "AWS::StackName"
+              - CognitoAuthorizedPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "cognito-identity:*"
+                Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "execute-api:Invoke"
+                Resource:
+                  - !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/getNFTsAlchemy"
+                  - !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/getFromLambda"
+
+  # Role for unauthenticated users
+  CognitoUnAuthorizedRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - CognitoUnAuthorizedRole
+      MaxSessionDuration: 43200
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              "ForAnyValue:StringLike":
+                "cognito-identity.amazonaws.com:amr": "unauthenticated"
+          - Effect: "Allow"
+            Principal:
+              Service: "apigateway.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Policies:
+        - PolicyName: !Join
+            - "-"
+            - - !Ref "AWS::StackName"
+              - CognitoUnAuthorizedPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "cognito-identity:*"
+                Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - "execute-api:Invoke"
+                Resource:
+                  - !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/getAnonymousData"
+
+# Stack output
+Outputs:
+  ApiEndpoint:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${NFTsGalleryApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
+  CognitoUserPool:
+    Description: "ID of the Cognito User Pool"
+    Value: !Ref CognitoUserPool
+  CognitoUserPoolWebClient:
+    Description: "Client ID associated to the Cognito UserPool"
+    Value: !Ref CognitoUserPoolWebClient
+  CognitoIdentityPool:
+    Description: "ID of the Cognito Identity Pool used to get credentials"
+    Value: !Ref CognitoIdentityPool

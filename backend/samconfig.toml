@@ -1,0 +1,10 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "NFTGalleryUserPool"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-xbwi2rjamp5a"
+s3_prefix = "NFTGalleryUserPool"
+region = "us-east-1"
+capabilities = "CAPABILITY_NAMED_IAM"
+image_repositories = []
