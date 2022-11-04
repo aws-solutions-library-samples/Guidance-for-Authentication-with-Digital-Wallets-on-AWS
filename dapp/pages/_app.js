@@ -6,10 +6,11 @@ import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
-// import MetaMaskOnboarding from '@metamask/onboarding';
 
 import { useEffect, useState } from 'react';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+
+import ContextProvider from "context/UserContext";
 
 import '../styles/globals.css'
 
@@ -80,7 +81,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider resetCSS>
       <WagmiConfig client={client}>
-        <Component {...pageProps} />
+        <ContextProvider>
+          <Component {...pageProps} />
+        </ContextProvider>
       </WagmiConfig>
     </ChakraProvider>
   )
