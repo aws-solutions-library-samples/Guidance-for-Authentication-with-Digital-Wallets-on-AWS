@@ -1,11 +1,13 @@
 import { Button, useToast, Box } from '@chakra-ui/react'
 import { useAccount } from 'wagmi';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { checkUser } from 'utils/user';
 import { getHttp } from 'utils/api';
 
+import ContextProvider, { GlobalContext } from 'context/UserContext';
+
 const Home = () => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useContext(GlobalContext);
     const [nfts, setNFTs] = useState(null);
     const { isConnected } = useAccount();
     const toast = useToast();
@@ -42,6 +44,7 @@ const Home = () => {
     const onGetFromLambda = async () => {
         try {
             const nfts = await getHttp('/getFromLambda');
+            console.log(nfts);
             setNFTs(nfts);
         }
         catch (e) {

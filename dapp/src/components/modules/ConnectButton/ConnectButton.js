@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useAccount, useConnect, useDisconnect, useSignMessage } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
@@ -9,8 +9,10 @@ import { checkUser, handleAmplifySignIn } from 'utils/user';
 
 import { Auth } from 'aws-amplify';
 
+import ContextProvider, { GlobalContext } from 'context/UserContext';
+
 const ConnectButton = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useContext(GlobalContext);
   const [loading, setLoading] = useState(false);
 
   const { connectAsync } = useConnect({ connector: new InjectedConnector() });
