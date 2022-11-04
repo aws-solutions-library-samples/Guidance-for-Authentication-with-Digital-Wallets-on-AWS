@@ -25,9 +25,12 @@ const Home = () => {
         }
         catch (e) {
             console.error(e);
+            const error = e?.message;
+            if (!error)
+                error = e;
             toast({
                 title: "Something went wrong...",
-                description: (e)?.message,
+                description: error,
                 status: 'error',
                 position: 'top-right',
                 isClosable: true,
