@@ -1,3 +1,12 @@
+# Intro
+
+See the `template.yaml` file which contains all the resources to be deployed.
+
+Rename `prod.parameters.example` to `prod.parameters` and update the values. You need to provide Alchemy API keys in order to have access to their API.
+
+Make sure you provide the parameter file as follow:
+`sam build ; sam deploy --on-failure DELETE --parameter-overrides $(cat prod.parameters)`
+
 # SAM Template boilerplate default README
 
 This project contains source code and supporting files for a serverless application that you can deploy with the AWS Serverless Application Model (AWS SAM) command line interface (CLI). It includes the following files and folders:

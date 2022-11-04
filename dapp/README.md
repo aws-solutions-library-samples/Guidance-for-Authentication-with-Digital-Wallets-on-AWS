@@ -1,3 +1,24 @@
+# Intro
+
+This demo dAPP connects to the blockchain and the API Gateway created by the SAM backend template.
+
+REname the `.env.example` file to `.env` and update the values there. 
+
+Then run `yarn` and `yarn dev` to start the webserver.
+
+# Usage
+
+There are two API calls in the example:
+
+   * getNFTsAlchemy: Get NFTs through API Gateway HTTP proxy (no lambda, less cost)
+   * getFromLambda: Get NFTs through API Gateway Lambda proxy integrations (lambda executed, more controls and customization)
+
+Both API calls return the same NFT data from Alchemy.
+
+# Anonymous users
+
+Unauthenticated users assume the 
+
 # NextJS Boilerplate default README
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

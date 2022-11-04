@@ -1,5 +1,4 @@
 'use strict';
-import { CryptoJS } from 'crypto-js';
 
 const headers = {
     "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers",
@@ -18,7 +17,7 @@ export const handler = async (event) => {
             throw new Error('[404] User Not Found');
         }
 
-        const nonce = CryptoJS.lib.WordArray.random(16).toString('hex');
+        const nonce = Math.floor(Math.random() * 1000000).toString();
         const message = `Welcome message, nonce: ${nonce}`;
 
         event.response.publicChallengeParameters = { message };

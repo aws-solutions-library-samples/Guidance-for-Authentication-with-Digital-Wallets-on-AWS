@@ -6,7 +6,6 @@
     "type": "module",
     "dependencies": {
         "alchemy-sdk": "^2.2.0",
-        "crypto": "^1.0.1",
         "ethers": "^5.7.1"
     },
     "devDependencies": {
