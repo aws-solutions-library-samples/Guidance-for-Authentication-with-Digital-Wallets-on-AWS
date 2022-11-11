@@ -21,12 +21,11 @@ export const handler = async (event) => {
         console.log('API KEY: ', process.env.ALCHEMY_ETH_API_KEY);
         console.log('Network: ', Network.ETH_MAINNET);
 
-
-
         console.log("Call alchemy");
         const nfts = await alchemy.nft.getNftsForOwner(event.requestContext.authorizer.claims["cognito:username"]);
         console.log("RESULT");
         console.log(nfts);
+
         return {
             headers,
             statusCode: 200,
