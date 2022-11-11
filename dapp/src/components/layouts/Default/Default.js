@@ -15,7 +15,7 @@ export default function Default({ children, pageName }) {
                 <meta name="twitter:card" content="summary_large_image" />
             </Head>
             <Header />
-            <Container maxW="container.lg" p={3} marginTop={100} as="main" minH="70vh">
+            <Container maxW="container.lg" p={3} marginTop={30} as="main" minH="70vh">
                 {children}
             </Container>
             <Footer />

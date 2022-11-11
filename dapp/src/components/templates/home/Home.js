@@ -1,8 +1,9 @@
-import { Button, useToast, Box } from '@chakra-ui/react'
+import { Button, useToast, Box, Text, Input, Flex } from '@chakra-ui/react'
 import { useAccount } from 'wagmi';
 import { useState, useEffect, useContext } from 'react';
 import { checkUser } from 'utils/user';
 import { getHttp } from 'utils/api';
+import Image from 'next/image';
 
 import ContextProvider, { GlobalContext } from 'context/UserContext';
 
@@ -19,7 +20,7 @@ const Home = () => {
     }, [])
 
     // Test for getNfts Alchemy HTTP passthrough
-    const onGetNFTsAlchemy = async () => {
+    const onGetFromAlchemyProxy = async () => {
         try {
             const nfts = await getHttp('/getNFTsAlchemy');
             console.log(nfts);
@@ -41,7 +42,7 @@ const Home = () => {
     }
 
     // Test for call to Lamnda
-    const onGetFromLambda = async () => {
+    const onGetFromAlchemyLambda = async () => {
         try {
             const nfts = await getHttp('/getFromLambda');
             console.log(nfts);
@@ -65,23 +66,105 @@ const Home = () => {
     // if (loggedIn) {
     return (
         <>
-            <Button onClick={onGetNFTsAlchemy}>
-                /getNFTsAlchemy ({(loggedIn ? 'Authenticated' : 'Unauthenticated')})
-            </Button>
-            <br /><br />
-            <Button onClick={onGetFromLambda}>
-                /getFromLambda ({(loggedIn ? 'Authenticated' : 'Unauthenticated')})
-            </Button>
-            <br /><br />
-            <Box textStyle='h1'>
-                My NFTs
+            <Box>
+                <Text fontSize="md" fontWeight="bold">Get my NFTs</Text>
+                <Text fontSize="xs" color="lightgray">These API calls will return a list of NFTs owned by the current connected wallet.</Text>
+
+                <Box mt='2.5' display="flex" alignItems="left" flexDirection="row" gap='2'>
+                    <Box bg='#0e1118' p='2'>
+                        <Box display="flex" flexDirection="row">
+                            <Box position='relative' w="22px" h="20px" mr="1">
+                                <Image layout='fill' src="/alchemy.png" ></Image>
+                            </Box>
+                            <Text fontSize="md" fontWeight="bold" >From Alchemy</Text>
+                        </Box>
+                        <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
+                            <Box>
+                                <Button w="100%" onClick={onGetFromAlchemyProxy}>
+                                    /getFromProxy
+                                </Button>
+                            </Box>
+                            <Box>
+                                <Button w="100%" onClick={onGetFromAlchemyLambda}>
+                                    /getFromLambda
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Box>
+
+                    <Box bg='#0e1118' p='2'>
+                        <Box display="flex" flexDirection="row">
+                            <Box position='relative' w="25px" h="20px" mr="1">
+                                <Image layout='fill' src="/moralis.png" ></Image>
+                            </Box>
+                            <Text fontSize="md" fontWeight="bold" >From Moralis</Text>
+                        </Box>
+                        <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
+                            <Box>
+                                <Button w="100%" onClick={onGetFromAlchemyProxy}>
+                                    /getFromProxy
+                                </Button>
+                            </Box>
+                            <Box>
+                                <Button w="100%" onClick={onGetFromAlchemyLambda}>
+                                    /getFromLambda
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Box>
+
+                    <Box bg='#0e1118' p='2'>
+                        <Box display="flex" flexDirection="row">
+                            <Box position='relative' w="25px" h="20px" mr="1">
+                                <Image layout='fill' src="/infura.png" ></Image>
+                            </Box>
+                            <Text fontSize="md" fontWeight="bold" >From Infura</Text>
+                        </Box>
+                        <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
+                            <Box>
+                                <Button w="100%" onClick={onGetFromAlchemyProxy}>
+                                    /getFromProxy
+                                </Button>
+                            </Box>
+                            <Box>
+                                <Button w="100%" onClick={onGetFromAlchemyLambda}>
+                                    /getFromLambda
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Box>
+
+                </Box>
             </Box>
-            <br />
+
+            <Box mt='5'>
+                <Text fontSize="md" fontWeight="bold">NFT collection lookup</Text>
+                <Text fontSize="xs" color="lightgray">Input the NFT contract address to get the NFTs in that collection. Any users can make those API calls even unauthenticated users. We use Alchemy as a provider.</Text>
+                <Flex minWidth='max-content' gap='2' align='left' mt='2'>
+                    <Box flex='2'>
+                        <Input placeholder='NFT contract address' />
+                    </Box>
+                    <Box>
+                        <Button onClick={onGetFromAlchemyProxy}>
+                            /getCollectionAlchemy
+                        </Button>
+                    </Box>
+                    <Box >
+                        <Button onClick={onGetFromAlchemyLambda}>
+                            /getCollectionFromLambda
+                        </Button>
+                    </Box>
+                </Flex>
+            </Box>
+
             {
                 loggedIn &&
-                <Box dangerouslySetInnerHTML={{ __html: JSON.stringify(nfts) }}>
+                <Box mt='5' p={4} bg='#0e1118' display={nfts ? 'block' : 'none'}>
+                    <Box dangerouslySetInnerHTML={{ __html: JSON.stringify(nfts) }}>
+                    </Box>
                 </Box>
             }
+
         </>
     );
     // }
