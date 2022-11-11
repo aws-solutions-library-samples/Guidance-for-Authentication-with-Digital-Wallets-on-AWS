@@ -118,6 +118,7 @@ Resources:
   ##
 
   # Protected API Method executing a Lambda function
+  # We pass the API keys as envirionement variables
   GetFromLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -132,6 +133,7 @@ Resources:
       Environment:
         Variables:
           ALCHEMY_ETH_API_KEY: !Ref AlchemyEthAPIKey
+          MORALIS_API_KEY: !Ref MoralisAPIKey
       Description: Test Lambda for authenticated API calls. Logs context and event. Can be called only with Authenticated Role
       Events:
         ApiEvent:
