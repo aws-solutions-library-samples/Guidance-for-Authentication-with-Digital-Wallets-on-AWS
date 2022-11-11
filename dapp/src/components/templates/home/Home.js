@@ -10,6 +10,7 @@ import ContextProvider, { GlobalContext } from 'context/UserContext';
 const Home = () => {
     const [user, setUser] = useContext(GlobalContext);
     const [nfts, setNFTs] = useState(null);
+    const [provider, setProvider] = useState(null);
     const { isConnected } = useAccount();
     const toast = useToast();
     let loggedIn = isConnected && user;
@@ -25,6 +26,7 @@ const Home = () => {
             const nfts = await getHttp('/getNFTsAlchemy');
             console.log(nfts);
             setNFTs(nfts);
+            setProvider({ name: 'Alchemy', src: '/alchemy.png' });
         }
         catch (e) {
             console.error(e);
@@ -42,11 +44,18 @@ const Home = () => {
     }
 
     // Test for call to Lamnda
-    const onGetFromLambda = async () => {
+    const onGetFromLambda = async (provider, action) => {
         try {
-            const nfts = await getHttp('/getFromLambda');
+            const myInit = {
+                querystrings: {
+                    provider: provider,
+                    action: action
+                }
+            };
+            const nfts = await getHttp('/getFromLambda', myInit);
             console.log(nfts);
             setNFTs(nfts);
+            setProvider(provider);
         }
         catch (e) {
             console.log(e);
@@ -69,6 +78,7 @@ const Home = () => {
             const nfts = await getHttp('/getNFTsMoralis');
             console.log(nfts);
             setNFTs(nfts);
+            setProvider({ name: 'Moralis', src: '/moralis.png' });
         }
         catch (e) {
             console.error(e);
@@ -91,6 +101,7 @@ const Home = () => {
             const nfts = await getHttp('/getNFTsInfura');
             console.log(nfts);
             setNFTs(nfts);
+            setProvider({ name: 'Infura', src: '/infura.png' });
         }
         catch (e) {
             console.error(e);
@@ -110,7 +121,8 @@ const Home = () => {
     // Test for getNftsCollection Alchemy HTTP passthrough
     const onGetCollectionAlchemyProxy = async () => {
         try {
-            const nfts = await getHttp('/getNFTsInfura');
+            // TODO
+            const nfts = await getHttp('/getCollectionAlchemy');
             console.log(nfts);
             setNFTs(nfts);
         }
@@ -142,7 +154,7 @@ const Home = () => {
                             <Box position='relative' w="22px" h="20px" mr="1">
                                 <Image layout='fill' src="/alchemy.png" ></Image>
                             </Box>
-                            <Text fontSize="md" fontWeight="bold" >From Alchemy</Text>
+                            <Text fontSize="md" fontWeight="bold" >Alchemy</Text>
                         </Box>
                         <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
                             <Box>
@@ -151,7 +163,7 @@ const Home = () => {
                                 </Button>
                             </Box>
                             <Box>
-                                <Button w="100%" onClick={onGetFromLambda}>
+                                <Button w="100%" onClick={() => onGetFromLambda({ name: 'Alchemy', src: '/alchemy.png' }, "getNfts")}>
                                     /getFromLambda
                                 </Button>
                             </Box>
@@ -163,7 +175,7 @@ const Home = () => {
                             <Box position='relative' w="25px" h="20px" mr="1">
                                 <Image layout='fill' src="/moralis.png" ></Image>
                             </Box>
-                            <Text fontSize="md" fontWeight="bold" >From Moralis</Text>
+                            <Text fontSize="md" fontWeight="bold" >Moralis</Text>
                         </Box>
                         <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
                             <Box>
@@ -172,7 +184,7 @@ const Home = () => {
                                 </Button>
                             </Box>
                             <Box>
-                                <Button w="100%" onClick={onGetFromLambda}>
+                                <Button w="100%" onClick={() => onGetFromLambda({ name: 'Moralis', src: '/moralis.png' }, "getNfts")}>
                                     /getFromLambda
                                 </Button>
                             </Box>
@@ -184,7 +196,7 @@ const Home = () => {
                             <Box position='relative' w="25px" h="20px" mr="1">
                                 <Image layout='fill' src="/infura.png" ></Image>
                             </Box>
-                            <Text fontSize="md" fontWeight="bold" >From Infura</Text>
+                            <Text fontSize="md" fontWeight="bold" >Infura</Text>
                         </Box>
                         <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
                             <Box>
@@ -193,7 +205,7 @@ const Home = () => {
                                 </Button>
                             </Box>
                             <Box>
-                                <Button w="100%" onClick={onGetFromLambda}>
+                                <Button w="100%" onClick={() => onGetFromLambda({ name: 'Infura', src: '/infura.png' }, "getNfts")}>
                                     /getFromLambda
                                 </Button>
                             </Box>
@@ -208,16 +220,16 @@ const Home = () => {
                 <Text fontSize="xs" color="lightgray">Input the NFT contract address to get the NFTs in that collection. Any users can make those API calls even unauthenticated users. We use Alchemy as a provider.</Text>
                 <Flex minWidth='max-content' gap='2' align='left' mt='2'>
                     <Box flex='2'>
-                        <Input placeholder='NFT contract address' />
+                        <Input bg="#3c4d6f" placeholder='NFT contract address' />
                     </Box>
                     <Box>
                         <Button onClick={onGetCollectionAlchemyProxy}>
-                            /getCollectionAlchemy
+                            /getFromProxy
                         </Button>
                     </Box>
                     <Box >
-                        <Button onClick={onGetFromLambda}>
-                            /getCollectionFromLambda
+                        <Button onClick={() => onGetFromLambda({ name: 'Alchemy', src: '/alchemy.png' }, "getCollection")}>
+                            /getFromLambda
                         </Button>
                     </Box>
                 </Flex>
@@ -225,8 +237,16 @@ const Home = () => {
 
             {
                 loggedIn &&
-                <Box mt='5' p={4} bg='#0e1118' display={nfts ? 'block' : 'none'}>
-                    <Box dangerouslySetInnerHTML={{ __html: JSON.stringify(nfts) }}>
+                <Box mt='5'>
+                    <Box display="flex" flexDirection="row">
+                        <Box position='relative' w="22px" h="20px" mr="1">
+                            <Image layout='fill' src={provider.src} ></Image>
+                        </Box>
+                        <Text fontSize="md" fontWeight="bold" >Output from {provider.name}</Text>
+                    </Box>
+                    <Box p={4} bg='#0e1118' display={nfts ? 'block' : 'none'}>
+                        <Box dangerouslySetInnerHTML={{ __html: JSON.stringify(nfts) }}>
+                        </Box>
                     </Box>
                 </Box>
             }
