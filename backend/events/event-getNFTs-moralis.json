@@ -1,0 +1,13 @@
+{
+    "queryStringParameters": {
+        "action": "getNFTs",
+        "provider": "Moralis"
+    },
+    "requestContext": {
+        "authorizer": {
+            "claims": {
+                "cognito:username": "0x9b84b6fe443d57c43c7ff0a2a48650bfee00227b"
+            }
+        }
+    }
+}

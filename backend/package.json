@@ -6,7 +6,8 @@
     "type": "module",
     "dependencies": {
         "alchemy-sdk": "^2.2.0",
-        "ethers": "^5.7.1"
+        "ethers": "^5.7.1",
+        "moralis": "^2.7.2"
     },
     "devDependencies": {
         "jest": "^26.6.3"
