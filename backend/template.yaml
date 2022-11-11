@@ -49,7 +49,13 @@ Parameters:
     Description: "The Alchemy URL containing the API Key. Used for HTTP proxy calls through API Gateway. Don't include trailing '/'. Format: https://eth-mainnet.g.alchemy.com/v2/kMJgN17xxxxxxxxxxxxxxx-xxxxxxxxx"
   AlchemyEthAPIKey:
     Type: String
-    Description: "The Alchemy ETH API Key. Used by the Lambda function to call Alchemy. Format: kMJgN17xxxxxxxxxxxxxxx-xxxxxxxxx"
+    Description: "The Alchemy ETH API Key. Used by the Lambda function to call Alchemy."
+  MoralisUrl:
+    Type: String
+    Description: "The Moralis URL. Used for HTTP proxy calls through API Gateway. Don't include trailing '/'. Format: https://deep-index.moralis.io/api/v2/{address}/nft"
+  MoralisAPIKey:
+    Type: String
+    Description: "The Moralis API Key. Used by the Lambda function to call Alchemy."
 
 Resources:
   # To force a redeployment of the API Gateway stage, change the number at the end of this resources name 'NFTsGalleryApiDeployment${randomNumber}'
@@ -57,7 +63,7 @@ Resources:
   # If you change the API definition or a mapping template, you will need to force redeploy the stage
   # This can also be done through CLI, CI/CD pipeline, SDK or in the console.
   # If you have problem. Delete the stack and recreate it OR make the change by hand in the AWS console and re-deploy the API by hand.
-  NFTsGalleryApiDeployment19:
+  NFTsGalleryApiDeployment21:
     DependsOn:
       - GetNFTsAlchemyOPTIONSMethod
       - GetNFTsAlchemyGETMethod
@@ -177,7 +183,7 @@ Resources:
             method.response.header.Access-Control-Allow-Methods: false
             method.response.header.Access-Control-Allow-Origin: false
 
-  # Protected API GET method to /getNFTs from Alchemy. Passthrough API Gateway Proxy. No Lambda.
+  # Protected API GET method to get NFTs from Alchemy (/getNFTsAlchemy). Passthrough API Gateway Proxy. No Lambda.
   GetNFTsAlchemyGETMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -195,6 +201,7 @@ Resources:
           - "/"
           - - !Ref AlchemyEthUrl
             - getNFTs
+        # Here we override the querystring parameter 'owner' to inject the user's wallet address
         RequestTemplates:
           application/json: |
             #set($address = $context.authorizer.claims['cognito:username'])
@@ -265,7 +272,7 @@ Resources:
             method.response.header.Access-Control-Allow-Methods: false
             method.response.header.Access-Control-Allow-Origin: false
 
-  # Protected API GET method to /getNFTs from Moralis. Passthrough API Gateway Proxy. No Lambda.
+  # Protected API GET method to get NFTs from Moralis (/getNFTsMoralis). Passthrough API Gateway Proxy. No Lambda.
   GetNFTsMoralisGETMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -279,14 +286,16 @@ Resources:
         IntegrationHttpMethod: GET
         PassthroughBehavior: NEVER
         # We inject the Moralis URL containing the API Key from our prod.parameters file
-        Uri: !Ref MoralisEthUrl
+        Uri: !Ref MoralisUrl
         RequestParameters:
-          method.request.path.address: True
+          integration.request.path.address: "'placeholder'"
+        # Here we inject the Moralis API key in the header
+        # We also override the path to the HTTP integration to inject the user wallet address
         RequestTemplates:
           application/json: !Sub |
             #set($address = $context.authorizer.claims['cognito:username'])
-            #set($context.requestOverride.header.X-API-Key = ${MoralisApiKey})
-            #set($context.requestOverride.path[$address] = '/nft')
+            #set($context.requestOverride.header.X-API-Key = '${MoralisAPIKey}')
+            #set($context.requestOverride.path.address = $address)
             $input.json("$")
         IntegrationResponses:
           - StatusCode: "200"

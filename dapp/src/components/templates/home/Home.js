@@ -42,7 +42,7 @@ const Home = () => {
     }
 
     // Test for call to Lamnda
-    const onGetFromAlchemyLambda = async () => {
+    const onGetFromLambda = async () => {
         try {
             const nfts = await getHttp('/getFromLambda');
             console.log(nfts);
@@ -50,6 +50,72 @@ const Home = () => {
         }
         catch (e) {
             console.log(e);
+            const error = e?.message;
+            if (!error)
+                error = e;
+            toast({
+                title: "Something went wrong...",
+                description: error,
+                status: 'error',
+                position: 'top-right',
+                isClosable: true,
+            });
+        }
+    }
+
+    // Test for getNfts Moralis HTTP passthrough
+    const onGetFromMoralisProxy = async () => {
+        try {
+            const nfts = await getHttp('/getNFTsMoralis');
+            console.log(nfts);
+            setNFTs(nfts);
+        }
+        catch (e) {
+            console.error(e);
+            const error = e?.message;
+            if (!error)
+                error = e;
+            toast({
+                title: "Something went wrong...",
+                description: error,
+                status: 'error',
+                position: 'top-right',
+                isClosable: true,
+            });
+        }
+    }
+
+    // Test for getNfts Infura HTTP passthrough
+    const onGetFromInfuraProxy = async () => {
+        try {
+            const nfts = await getHttp('/getNFTsInfura');
+            console.log(nfts);
+            setNFTs(nfts);
+        }
+        catch (e) {
+            console.error(e);
+            const error = e?.message;
+            if (!error)
+                error = e;
+            toast({
+                title: "Something went wrong...",
+                description: error,
+                status: 'error',
+                position: 'top-right',
+                isClosable: true,
+            });
+        }
+    }
+
+    // Test for getNftsCollection Alchemy HTTP passthrough
+    const onGetCollectionAlchemyProxy = async () => {
+        try {
+            const nfts = await getHttp('/getNFTsInfura');
+            console.log(nfts);
+            setNFTs(nfts);
+        }
+        catch (e) {
+            console.error(e);
             const error = e?.message;
             if (!error)
                 error = e;
@@ -85,7 +151,7 @@ const Home = () => {
                                 </Button>
                             </Box>
                             <Box>
-                                <Button w="100%" onClick={onGetFromAlchemyLambda}>
+                                <Button w="100%" onClick={onGetFromLambda}>
                                     /getFromLambda
                                 </Button>
                             </Box>
@@ -101,12 +167,12 @@ const Home = () => {
                         </Box>
                         <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
                             <Box>
-                                <Button w="100%" onClick={onGetFromAlchemyProxy}>
+                                <Button w="100%" onClick={onGetFromMoralisProxy}>
                                     /getFromProxy
                                 </Button>
                             </Box>
                             <Box>
-                                <Button w="100%" onClick={onGetFromAlchemyLambda}>
+                                <Button w="100%" onClick={onGetFromLambda}>
                                     /getFromLambda
                                 </Button>
                             </Box>
@@ -122,12 +188,12 @@ const Home = () => {
                         </Box>
                         <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
                             <Box>
-                                <Button w="100%" onClick={onGetFromAlchemyProxy}>
+                                <Button w="100%" onClick={onGetFromInfuraProxy}>
                                     /getFromProxy
                                 </Button>
                             </Box>
                             <Box>
-                                <Button w="100%" onClick={onGetFromAlchemyLambda}>
+                                <Button w="100%" onClick={onGetFromLambda}>
                                     /getFromLambda
                                 </Button>
                             </Box>
@@ -145,12 +211,12 @@ const Home = () => {
                         <Input placeholder='NFT contract address' />
                     </Box>
                     <Box>
-                        <Button onClick={onGetFromAlchemyProxy}>
+                        <Button onClick={onGetCollectionAlchemyProxy}>
                             /getCollectionAlchemy
                         </Button>
                     </Box>
                     <Box >
-                        <Button onClick={onGetFromAlchemyLambda}>
+                        <Button onClick={onGetFromLambda}>
                             /getCollectionFromLambda
                         </Button>
                     </Box>
