@@ -195,7 +195,7 @@ const Home = () => {
                         </Box>
                     </Box>
 
-                    <Box bg='#0e1118' p='2'>
+                    {/* <Box bg='#0e1118' p='2'>
                         <Box display="flex" flexDirection="row">
                             <Box position='relative' w="25px" h="20px" mr="1">
                                 <Image layout='fill' src="/infura.png" ></Image>
@@ -214,7 +214,7 @@ const Home = () => {
                                 </Button>
                             </Box>
                         </Box>
-                    </Box>
+                    </Box> */}
 
                 </Box>
             </Box>

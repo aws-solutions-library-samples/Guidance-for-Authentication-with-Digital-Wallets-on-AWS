@@ -2,3 +2,5 @@ node_modules
 .aws-sam/build
 prod.parameters
 
+.env*
+
