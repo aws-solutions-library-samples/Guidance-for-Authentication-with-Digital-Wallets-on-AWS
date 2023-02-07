@@ -1,20 +1,23 @@
-import { Box, Container, Flex, HStack } from '@chakra-ui/react';
-import { AppLogo, NavBar } from 'components/elements';
+import { AppLogo } from 'components/elements';
 import { ConnectButton } from 'components/modules';
 
 const Header = () => {
     return (
-        <Box borderBottom="1px" borderBottomColor="chakra-border-color">
-            <Container maxW="container.xl" p={'10px'}>
-                <Flex align="center" justify="space-between">
-                    <AppLogo />
-                    <NavBar />
-                    <HStack gap={'10px'}>
+        <nav className="bg-[#181e27]">
+            <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                <div className="relative flex h-16 items-center justify-between">
+                    <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                        <div className="flex flex-shrink-0 items-center">
+                            <AppLogo />
+                        </div>
+                    </div>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                         <ConnectButton />
-                    </HStack>
-                </Flex>
-            </Container>
-        </Box>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
     );
 };
 

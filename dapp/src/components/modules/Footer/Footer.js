@@ -1,6 +1,3 @@
-import { Box, Link, Text } from '@chakra-ui/react';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
-
 const links = {
     github: 'https://github.com/ethereum-boilerplate/ethereum-boilerplate/',
     forum: 'https://forum.moralis.io/',
@@ -9,7 +6,7 @@ const links = {
 
 const Footer = () => {
     return (
-        <Box textAlign={'center'} w="full" p={6}>
+        <div className="container mx-auto">
             {/* <Text>
                 ⭐️ Please star this{' '}
                 <Link href={links.github} isExternal alignItems={'center'}>
@@ -29,7 +26,7 @@ const Footer = () => {
                     Moralis <ExternalLinkIcon />
                 </Link>
             </Text> */}
-        </Box>
+        </div>
     );
 };
 

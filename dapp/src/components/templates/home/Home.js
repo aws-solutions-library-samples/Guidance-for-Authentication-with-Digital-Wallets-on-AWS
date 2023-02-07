@@ -1,11 +1,11 @@
-import { Button, useToast, Box, Text, Input, Flex } from '@chakra-ui/react'
 import { useAccount } from 'wagmi';
 import { useState, useEffect, useContext } from 'react';
 import { checkUser } from 'utils/user';
 import { getHttp } from 'utils/api';
-import Image from 'next/image';
+import Image from 'next/Image';
 
 import ContextProvider, { GlobalContext } from 'context/UserContext';
+import { NFTList } from 'components/modules/NFTList';
 
 const Home = () => {
     const [user, setUser] = useContext(GlobalContext);
@@ -13,7 +13,6 @@ const Home = () => {
     const [provider, setProvider] = useState(null);
     const [type, setType] = useState(null);
     const { isConnected } = useAccount();
-    const toast = useToast();
     let loggedIn = isConnected && user;
 
     useEffect(() => {
@@ -34,13 +33,7 @@ const Home = () => {
             const error = e?.message;
             if (!error)
                 error = e;
-            toast({
-                title: "Something went wrong...",
-                description: error,
-                status: 'error',
-                position: 'top-right',
-                isClosable: true,
-            });
+            alert("Something went wrong...\n" + error);
         }
     }
 
@@ -64,13 +57,7 @@ const Home = () => {
             const error = e?.message;
             if (!error)
                 error = e;
-            toast({
-                title: "Something went wrong...",
-                description: error,
-                status: 'error',
-                position: 'top-right',
-                isClosable: true,
-            });
+            alert("Something went wrong...\n" + error);
         }
     }
 
@@ -88,13 +75,7 @@ const Home = () => {
             const error = e?.message;
             if (!error)
                 error = e;
-            toast({
-                title: "Something went wrong...",
-                description: error,
-                status: 'error',
-                position: 'top-right',
-                isClosable: true,
-            });
+            alert("Something went wrong...\n" + error);
         }
     }
 
@@ -112,13 +93,7 @@ const Home = () => {
             const error = e?.message;
             if (!error)
                 error = e;
-            toast({
-                title: "Something went wrong...",
-                description: error,
-                status: 'error',
-                position: 'top-right',
-                isClosable: true,
-            });
+            alert("Something went wrong...\n" + error);
         }
     }
 
@@ -136,125 +111,101 @@ const Home = () => {
             const error = e?.message;
             if (!error)
                 error = e;
-            toast({
-                title: "Something went wrong...",
-                description: error,
-                status: 'error',
-                position: 'top-right',
-                isClosable: true,
-            });
+            alert("Something went wrong...\n" + error);
         }
     }
 
     return (
         <>
-            <Box>
-                <Text fontSize="md" fontWeight="bold">Get my NFTs</Text>
-                <Text fontSize="xs" color="lightgray">These API calls will return a list of NFTs owned by the current connected wallet.</Text>
+        <div className="container mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 text-white mt-10">
+            <div>
+                <p className="text-lg font-bold">Get my NFTs</p>
+                <p className="text-sm">These API calls will return a list of NFTs owned by the current connected wallet.</p>
 
-                <Box mt='2.5' display="flex" alignItems="left" flexDirection="row" gap='2'>
-                    <Box bg='#0e1118' p='2'>
-                        <Box display="flex" flexDirection="row">
-                            <Box position='relative' w="22px" h="20px" mr="1">
+                <div className="flex flex-row mt-5">
+                    <div className='bg-[#181e27] p-2 flex-none'>
+                        <div className="flex flex-row">
+                            <div className="flex-none relative w-[22px] h-[20px] mr-1">
                                 <Image layout='fill' src="/alchemy.png" ></Image>
-                            </Box>
-                            <Text fontSize="md" fontWeight="bold" >Alchemy</Text>
-                        </Box>
-                        <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
-                            <Box>
-                                <Button w="100%" onClick={onGetFromAlchemyProxy}>
+                            </div>
+                            <p className=" flex-none text-base font-bold">Alchemy</p>
+                        </div>
+                        <div className="flex-auto mt-2 items-start flex-col gap-2">
+                            <div>
+                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded" onClick={onGetFromAlchemyProxy}>
                                     /getFromProxy
-                                </Button>
-                            </Box>
-                            <Box>
-                                <Button w="100%" onClick={() => onGetFromLambda({ name: 'Alchemy', src: '/alchemy.png' }, "getNFTs")}>
+                                </button>
+                            </div>
+                            <div className="mt-2">
+                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded" onClick={() => onGetFromLambda({ name: 'Alchemy', src: '/alchemy.png' }, "getNFTs")}>
                                     /getFromLambda
-                                </Button>
-                            </Box>
-                        </Box>
-                    </Box>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                    <Box bg='#0e1118' p='2'>
-                        <Box display="flex" flexDirection="row">
-                            <Box position='relative' w="25px" h="20px" mr="1">
+                    <div className='bg-[#181e27] p-2 ml-2 flex-none'>
+                        <div className="flex flex-row">
+                            <div className="flex-none relative w-[22px] h-[20px] mr-1">
                                 <Image layout='fill' src="/moralis.png" ></Image>
-                            </Box>
-                            <Text fontSize="md" fontWeight="bold" >Moralis</Text>
-                        </Box>
-                        <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
-                            <Box>
-                                <Button w="100%" onClick={onGetFromMoralisProxy}>
+                            </div>
+                            <p className="text-base font-bold">Moralis</p>
+                        </div>
+                        <div className="flex-auto mt-2 items-start flex-col gap-2">
+                            <div>
+                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded" onClick={onGetFromMoralisProxy}>
                                     /getFromProxy
-                                </Button>
-                            </Box>
-                            <Box>
-                                <Button w="100%" onClick={() => onGetFromLambda({ name: 'Moralis', src: '/moralis.png' }, "getNFTs")}>
+                                </button>
+                            </div>
+                            <div className="mt-2">
+                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded" onClick={() => onGetFromLambda({ name: 'Moralis', src: '/moralis.png' }, "getNFTs")}>
                                     /getFromLambda
-                                </Button>
-                            </Box>
-                        </Box>
-                    </Box>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    {/* <Box bg='#0e1118' p='2'>
-                        <Box display="flex" flexDirection="row">
-                            <Box position='relative' w="25px" h="20px" mr="1">
-                                <Image layout='fill' src="/infura.png" ></Image>
-                            </Box>
-                            <Text fontSize="md" fontWeight="bold" >Infura</Text>
-                        </Box>
-                        <Box mt='2' display="flex" alignItems="left" flexDirection="column" gap='2'>
-                            <Box>
-                                <Button w="100%" onClick={onGetFromInfuraProxy}>
-                                    /getFromProxy
-                                </Button>
-                            </Box>
-                            <Box>
-                                <Button w="100%" onClick={() => onGetFromLambda({ name: 'Infura', src: '/infura.png' }, "getNFTs")}>
-                                    /getFromLambda
-                                </Button>
-                            </Box>
-                        </Box>
-                    </Box> */}
-
-                </Box>
-            </Box>
-
-            <Box mt='5'>
-                <Text fontSize="md" fontWeight="bold">NFT collection lookup</Text>
-                <Text fontSize="xs" color="lightgray">Input the NFT contract address to get the NFTs in that collection. Any users can make those API calls even unauthenticated users. We use Alchemy as a provider.</Text>
-                <Flex minWidth='max-content' gap='2' align='left' mt='2'>
-                    <Box flex='2'>
-                        <Input bg="#3c4d6f" placeholder='NFT contract address' />
-                    </Box>
-                    <Box>
-                        <Button onClick={onGetCollectionAlchemyProxy}>
+            <div className="mt-10">
+                <p className="text-lg font-bold">NFT collection lookup</p>
+                <p className="text-sm">Input the NFT contract address to get the NFTs in that collection. Any users can make those API calls even unauthenticated users. We use <strong>Alchemy</strong> as a provider.</p>
+                <div className="flex flex-row gap-2 content-start mt-5">
+                    <div className="flex-1">
+                        <input className="text-[#3c4d6f] w-full p-2 rounded" placeholder='NFT contract address' />
+                    </div>
+                    <div className="flex-none">
+                        <button className="text-left bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded" onClick={onGetCollectionAlchemyProxy}>
                             /getFromProxy
-                        </Button>
-                    </Box>
-                    <Box >
-                        <Button onClick={() => onGetFromLambda({ name: 'Alchemy', src: '/alchemy.png' }, "getCollection")}>
+                        </button>
+                    </div>
+                    <div className="flex-none">
+                        <button className="text-left bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded" onClick={() => onGetFromLambda({ name: 'Alchemy', src: '/alchemy.png' }, "getCollection")}>
                             /getFromLambda
-                        </Button>
-                    </Box>
-                </Flex>
-            </Box>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             {
                 loggedIn &&
-                <Box mt='5'>
-                    <Box display={provider ? 'flex' : 'none'} flexDirection="row">
-                        <Box position='relative' w="22px" h="20px" mr="1">
+                <div className={provider ? 'mt-10' : 'hidden'}>
+                    <div className="p-4 flex flex-row bg-[#181e27]">
+                        <div className="flex-none relative w-[22px] h-[20px] mr-1">
                             <Image layout='fill' src={provider?.src} ></Image>
-                        </Box>
-                        <Text fontSize="md" fontWeight="bold" >Output from {provider?.name} {type}</Text>
-                    </Box>
-                    <Box p={4} bg='#0e1118' display={nfts ? 'block' : 'none'}>
-                        <Box dangerouslySetInnerHTML={{ __html: JSON.stringify(nfts) }}>
-                        </Box>
-                    </Box>
-                </Box>
+                        </div>
+                        <p className="text-base font-bold">Output from {provider?.name} {type}</p>
+                    </div>
+                    <div className="p-4 bg-[#181e27]">
+                        <div>
+                            {nfts ? JSON.stringify(nfts) : 'No result'}
+                        </div>
+                        <NFTList provider={provider} nfts={nfts} />
+                    </div>
+                </div>
             }
 
+        </div>
         </>
     );
 };
