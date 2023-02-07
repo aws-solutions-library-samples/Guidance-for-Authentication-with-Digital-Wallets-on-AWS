@@ -8,7 +8,6 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
 
 import { useEffect, useState } from 'react';
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 
 import ContextProvider from "context/UserContext";
 
@@ -44,13 +43,6 @@ const client = createClient({
   ]
 });
 
-const config = {
-  initialColorMode: 'dark',
-  useSystemColorMode: false,
-};
-
-const theme = extendTheme({ config });
-
 function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
@@ -79,13 +71,11 @@ function MyApp({ Component, pageProps }) {
   });
 
   return (
-    <ChakraProvider resetCSS>
-      <WagmiConfig client={client}>
-        <ContextProvider>
-          <Component {...pageProps} />
-        </ContextProvider>
-      </WagmiConfig>
-    </ChakraProvider>
+    <WagmiConfig client={client}>
+      <ContextProvider>
+        <Component {...pageProps} />
+      </ContextProvider>
+    </WagmiConfig>
   )
 }
 

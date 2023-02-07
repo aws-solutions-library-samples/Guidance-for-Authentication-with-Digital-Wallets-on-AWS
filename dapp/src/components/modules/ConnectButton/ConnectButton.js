@@ -3,7 +3,6 @@ import { useAccount, useConnect, useDisconnect, useSignMessage } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
 import { getEllipsisTxt } from 'utils/format';
-import { Button, Text, HStack, Avatar, useToast } from '@chakra-ui/react';
 
 import { checkUser, handleAmplifySignIn } from 'utils/user';
 
@@ -19,7 +18,7 @@ const ConnectButton = () => {
   const { disconnectAsync } = useDisconnect();
   const { isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
-  const toast = useToast();
+  // const toast = useToast();
 
   useEffect(() => {
     checkUser(setUser);
@@ -63,13 +62,14 @@ const ConnectButton = () => {
 
     } catch (e) {
       console.error(e);
-      toast({
-        title: 'Something went wrong...',
-        description: (e)?.message,
-        status: 'error',
-        position: 'top-right',
-        isClosable: true,
-      });
+      alert('Something went wrong...\n' + (e)?.message);
+      // toast({
+      //   title: 'Something went wrong...',
+      //   description: (e)?.message,
+      //   status: 'error',
+      //   position: 'top-right',
+      //   isClosable: true,
+      // });
     }
 
     setLoading(false);
@@ -87,16 +87,19 @@ const ConnectButton = () => {
 
   if (user) {
     return (
-      <HStack onClick={onSignOut} cursor={'pointer'}>
-        <Avatar size="xs" />
-        <Text fontWeight="medium">{getEllipsisTxt(user.username)}</Text>
-      </HStack>
+      // <HStack onClick={onSignOut} cursor={'pointer'}>
+      //   <Avatar size="xs" />
+      //   <Text fontWeight="medium">{getEllipsisTxt(user.username)}</Text>
+      // </HStack>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={onSignOut} cursor={'pointer'}>
+        {getEllipsisTxt(user.username)}
+      </button>
     );
   } else {
     return (
-      <Button size="sm" onClick={onSignIn} colorScheme="blue" disabled={loading}>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={onSignIn} cursor={'pointer'} disabled={loading}>
         Connect Wallet
-      </Button>
+      </button>
     );
   }
 }

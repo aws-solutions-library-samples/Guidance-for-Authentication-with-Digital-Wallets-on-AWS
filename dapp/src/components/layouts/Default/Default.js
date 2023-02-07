@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { Container } from '@chakra-ui/react';
 import { Footer, Header } from 'components/modules';
 
 export default function Default({ children, pageName }) {
@@ -15,9 +14,9 @@ export default function Default({ children, pageName }) {
                 <meta name="twitter:card" content="summary_large_image" />
             </Head>
             <Header />
-            <Container maxW="container.lg" p={3} marginTop={30} as="main" minH="70vh">
+            <div className="container mx-auto">
                 {children}
-            </Container>
+            </div>
             <Footer />
         </div>
     );
