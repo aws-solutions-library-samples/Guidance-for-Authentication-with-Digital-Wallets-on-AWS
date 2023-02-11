@@ -97,7 +97,7 @@ const ConnectButton = () => {
     );
   } else {
     return (
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={onSignIn} cursor={'pointer'} disabled={loading}>
+      <button className="bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 text-white font-bold py-2 px-4 rounded" onClick={onSignIn} cursor={'pointer'} disabled={loading}>
         Connect Wallet
       </button>
     );

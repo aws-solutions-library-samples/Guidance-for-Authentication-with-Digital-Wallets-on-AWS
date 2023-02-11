@@ -2,4 +2,4 @@ AlchemyEthUrl=https://eth-mainnet.g.alchemy.com/v2/xxxxxxxxxxxXXXXXXXXXXXXXXXXX
 AlchemyEthAPIKey=xxxxxxxxxxx-XXXXXXXXXXXXXXXXX
 # Keep MoralisUrl as is. The path parameter {address} is used by API Gateway to inject the user's wallet address
 MoralisUrl=https://deep-index.moralis.io/api/v2/{address}/nft
-MoralisAPIKey=jtI2hK1sqK9WpeRN7gPZ1KYsmuP0BrMxeffwu27CGto0arRScuDPWnbBmx2VgZED
+MoralisAPIKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

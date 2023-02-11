@@ -1,9 +1,6 @@
-'use strict';
 import { Network, Alchemy } from 'alchemy-sdk';
-import Moralis from "moralis";
-// Hack to make it work in a node module. See: https://forum.moralis.io/t/cannot-find-package-moralis-sdk/18707/10
-const Moralis2 = Moralis.default;
-import { EvmChain } from "@moralisweb3/evm-utils";
+import Moralis from 'moralis';
+import { EvmChain } from '@moralisweb3/evm-utils';
 
 const headers = {
     "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers",
@@ -18,7 +15,7 @@ const settings = {
 };
 const alchemy = new Alchemy(settings);
 
-async function alchemyActions(username, action) {
+async function alchemyActions(username, action, chain = EvmChain.ETHEREUM) {
     switch (action) {
         case 'getNFTs':
             return await alchemy.nft.getNftsForOwner(username);
@@ -27,31 +24,24 @@ async function alchemyActions(username, action) {
         default:
             throw 'Unknown action: ' + action;
     }
-
 }
 
-async function moralisActions(username, action) {
+async function moralisActions(username, action, chain = EvmChain.ETHEREUM) {
+    console.log("GO Moralis");
     switch (action) {
         case 'getNFTs':
-            await Moralis2.start({
-                apiKey: process.env.MORALIS_API_KEY,
-                logLevel: 'verbose'
-            });
+            console.log("Moralis go init");
 
-            const chain = EvmChain.ETHEREUM;
-            return await Moralis2.EvmApi.nft.getWalletNFTs({
+            await Moralis.start({
+                apiKey: process.env.MORALIS_API_KEY
+            });
+            console.log("Moralis start done");
+
+            console.log("Moralis go get");
+            return await Moralis.EvmApi.nft.getWalletNFTs({
                 address: username,
                 chain,
             });
-        default:
-            throw 'Unknown action: ' + action;
-    }
-}
-
-async function infuraActions(username, action) {
-    switch (action) {
-        case 'getNFTs':
-            break;
         default:
             throw 'Unknown action: ' + action;
     }
@@ -76,9 +66,6 @@ export const handler = async (event) => {
                 break;
             case 'Moralis':
                 output = await moralisActions(username, event.queryStringParameters.action);
-                break;
-            case 'Infura':
-                output = await infuraActions(username, event.queryStringParameters.action);
                 break;
             default:
                 throw ('Unknown provider: ' + event.queryStringParameters.provider);

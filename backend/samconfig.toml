@@ -8,3 +8,5 @@ s3_prefix = "NFTGalleryUserPool"
 region = "us-east-1"
 capabilities = "CAPABILITY_NAMED_IAM"
 image_repositories = []
+confirm_changeset = true
+parameter_overrides = "AlchemyEthUrl=\"https://eth-mainnet.g.alchemy.com/v2/kMJgN17eqdLdIHl1eDI-qlkGyK6eUe4P\" AlchemyEthAPIKey=\"kMJgN17eqdLdIHl1eDI-qlkGyK6eUe4P\" MoralisUrl=\"https://deep-index.moralis.io/api/v2/{address}/nft?normalizeMetadata=true&format=decimal&chain={chain}\" MoralisAPIKey=\"jtI2hK1sqK9WpeRN7gPZ1KYsmuP0BrMxeffwu27CGto0arRScuDPWnbBmx2VgZED\" InfuraEthUrl=\"https://mainnet.infura.io/v3/68a634026aa04a1ea7f3d50de4ad3af4\" InfuraAPIKey=\"68a634026aa04a1ea7f3d50de4ad3af4\""
