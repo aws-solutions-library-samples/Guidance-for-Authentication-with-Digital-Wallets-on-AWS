@@ -1,6 +1,5 @@
 node_modules
-.aws-sam/build
+.aws-sam
 prod.parameters
-
 .env*
-
+.DS_Store

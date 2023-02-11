@@ -6,27 +6,13 @@ const links = {
 
 const Footer = () => {
     return (
-        <div className="container mx-auto">
-            {/* <Text>
-                ⭐️ Please star this{' '}
-                <Link href={links.github} isExternal alignItems={'center'}>
-                    boilerplate <ExternalLinkIcon />
-                </Link>
-                , every star makes us very happy!
-            </Text>
-            <Text>
-                🙋 You have questions? Ask them on the{' '}
-                <Link href={links.forum} isExternal alignItems={'center'}>
-                    Moralis forum <ExternalLinkIcon />
-                </Link>
-            </Text>
-            <Text>
-                📖 Read more about{' '}
-                <Link href={links.moralis} isExternal alignItems={'center'}>
-                    Moralis <ExternalLinkIcon />
-                </Link>
-            </Text> */}
-        </div>
+        <nav className="bg-[#181e27] pb-10 pt-10 h-max">
+            <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 h-max">
+                <a className="text-white" href="" target="_blank">
+                    Github project repository
+                </a>
+            </div>
+        </nav>
     );
 };
 

@@ -1,56 +1,46 @@
-// import { Eth } from '@web3uikit/icons';
-// import { resolveIPFS } from 'utils/resolveIPFS';
+import { Eth } from '@web3uikit/icons';
 import Image from 'next/Image';
 
 const NFTCard = ({ nft }) => {
-  // const bgColor = useColorModeValue('none', 'gray.700');
-  // const borderColor = useColorModeValue('gray.200', 'gray.700');
-  // const descBgColor = useColorModeValue('gray.100', 'gray.600');
 
   return (
     <>
-      {/* <div>
-        {nft.title}
-      </div> */}
-
-      <div bgColor={bgColor} padding={3} borderRadius="xl" borderWidth="1px" borderColor={borderColor}>
-        <div maxHeight="260px" overflow={'hidden'} borderRadius="xl">
+      <div className="p-3 rounded bg-white text-black">
+        <div className="max-h-[256px] overflow-hidden">
           <Image
-            src={resolveIPFS(metadata?.image)}
+            src={nft.thumbnail}
             alt={'nft'}
-            minH="260px"
-            minW="260px"
-            divSize="100%"
-            objectFit="fill"
+            height="260"
+            width="260"
           />
         </div>
-        <div mt="1" fontWeight="semibold" as="h4" noOfLines={1} marginTop={2}>
+        <div className="mt-1 font-bold">
           {nft.title}
         </div>
-        <HStack alignItems={'center'}>
-          <div as="h4" noOfLines={1} fontWeight="medium" fontSize="smaller">
-            {contractType}
+        <div className="text-center flex flex-row gap-2">
+          <div className="font-medium text-sm flex-none">
+            {nft.contract_type}
           </div>
-          <Eth fontSize="20px" />
-        </HStack>
-        <SimpleGrid columns={2} spacing={4} bgColor={descBgColor} padding={2.5} borderRadius="xl" marginTop={2}>
+          <Eth fontSize="20px flex-none" />
+        </div>
+        {/* <div className="flex flex-row gap-2 rounded mt-2">
           <div>
-            <div as="h4" noOfLines={1} fontWeight="medium" fontSize="sm">
+            <div className="flex-1 font-medium text-sm">
               Symbol
             </div>
-            <div as="h4" noOfLines={1} fontSize="sm">
-              {symbol}
+            <div className="font-small font-bold">
+              {nft.symbol}
             </div>
           </div>
           <div>
-            <div as="h4" noOfLines={1} fontWeight="medium" fontSize="sm">
+            <div className="flex-1 font-medium text-sm ">
               Amount
             </div>
-            <div as="h4" noOfLines={1} fontSize="sm">
-              {amount}
+            <div className="font-small font-bold">
+              {nft.amount}
             </div>
           </div>
-        </SimpleGrid>
+        </div> */}
       </div>
     </>
   );

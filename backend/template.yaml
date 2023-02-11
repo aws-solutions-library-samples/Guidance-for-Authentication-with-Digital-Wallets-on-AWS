@@ -19,13 +19,15 @@ Globals:
   Function:
     Tracing: Active
     Timeout: 10
-    Runtime: nodejs16.x
+    Runtime: nodejs16.x      
+    Architectures:
+      - arm64
 
   Api:
     Cors:
       AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
       AllowOrigin: "'*'"
-      AllowMethods: "'OPTIONS,GET,POST'"
+      AllowMethods: "'OPTIONS,GET,POST,PUT'"
     Auth:
       InvokeRole: NONE
       AddDefaultAuthorizerToCorsPreflight: false
@@ -56,7 +58,7 @@ Parameters:
   MoralisAPIKey:
     Type: String
     Description: "The Moralis API Key. Used by the Lambda function to call Moralis."
-  InfuraUrl:
+  InfuraEthUrl:
     Type: String
     Description: "The Infura URL. Used for HTTP proxy calls through API Gateway. Don't include trailing '/'. Format: https://mainnet.infura.io/v3/xxxxxxxxxxxxxxxxxxxxxxx"
   InfuraAPIKey:
@@ -65,11 +67,11 @@ Parameters:
 
 Resources:
   # To force a redeployment of the API Gateway stage, change the number at the end of this resources name 'NFTsGalleryApiDeployment${randomNumber}'
-  # SAM will create this deployment resource only the first time
+  # SAM will create this deployment resource only the first time so the hack above forces a redeploy
   # If you change the API definition or a mapping template, you will need to force redeploy the stage
   # This can also be done through CLI, CI/CD pipeline, SDK or in the console.
   # If you have problem. Delete the stack and recreate it OR make the change by hand in the AWS console and re-deploy the API by hand.
-  NFTsGalleryApiDeployment21:
+  NFTsGalleryApiDeployment26:
     DependsOn:
       - GetNFTsAlchemyOPTIONSMethod
       - GetNFTsAlchemyGETMethod
@@ -118,37 +120,6 @@ Resources:
       ContentType: "application/json"
       RestApiId: !Ref NFTsGalleryApi
       Schema: {}
-
-  ##
-  ## API Methods and lambda functions
-  ##
-
-  # Protected API Method executing a Lambda function
-  # We pass the API keys as envirionement variables
-  GetFromLambdaFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Join
-        - "-"
-        - - !Ref "AWS::StackName"
-          - getFromLambdaFunction
-      Handler: src/handlers/getFromLambda.handler
-      Architectures:
-        - x86_64
-      MemorySize: 256
-      Environment:
-        Variables:
-          ALCHEMY_ETH_API_KEY: !Ref AlchemyEthAPIKey
-          MORALIS_API_KEY: !Ref MoralisAPIKey
-          INFURA_API_KEY: !Ref InfuraAPIKey
-      Description: Test Lambda for authenticated API calls. Logs context and event. Can be called only with Authenticated Role
-      Events:
-        ApiEvent:
-          Type: Api
-          Properties:
-            Path: /getFromLambda
-            Method: GET
-            RestApiId: !Ref NFTsGalleryApi # We attach our Lambba to our existing API
 
   ###
   ### Alchemy Proxy getNFTs
@@ -249,7 +220,7 @@ Resources:
     Properties:
       RestApiId: !Ref NFTsGalleryApi
       ParentId: !GetAtt NFTsGalleryApi.RootResourceId
-      PathPart: getCollectionAlchemy
+      PathPart: getNFTsCollectionAlchemy
 
   # Public API OPTIONS method to /getCollectionAlchemy  (to allow CORS)
   GetCollectionAlchemyOPTIONSMethod:
@@ -378,6 +349,8 @@ Resources:
       HttpMethod: GET
       AuthorizationType: COGNITO_USER_POOLS
       AuthorizerId: !Ref NFTGalleryAPICognitoAuthorizer
+      RequestParameters: 
+        method.request.querystring.chain: false
       Integration:
         Type: HTTP
         IntegrationHttpMethod: GET
@@ -386,6 +359,7 @@ Resources:
         Uri: !Ref MoralisUrl
         RequestParameters:
           integration.request.path.address: "'placeholder'"
+          integration.request.querystring.chain: 'method.request.querystring.chain'
         # Here we inject the Moralis API key in the header
         # We also override the path to the HTTP integration to inject the user wallet address
         RequestTemplates:
@@ -393,6 +367,9 @@ Resources:
             #set($address = $context.authorizer.claims['cognito:username'])
             #set($context.requestOverride.header.X-API-Key = '${MoralisAPIKey}')
             #set($context.requestOverride.path.address = $address)
+            #if(!$input.params('chain'))
+              #set($context.requestOverride.querystring.chain = 'eth')
+            #end
             $input.json("$")
         IntegrationResponses:
           - StatusCode: "200"
@@ -417,94 +394,59 @@ Resources:
             method.response.header.Access-Control-Allow-Methods: false
             method.response.header.Access-Control-Allow-Origin: false
 
-  # ###
-  # ### Infura Proxy
-  # ###
+  ##
+  ## Lambda to get NFTs from Alchemy or Moralis /getFromLambda
+  ##
 
-  # # A resource /getNFTsInfura
-  # GetNFTsInfuraResource:
-  #   Type: AWS::ApiGateway::Resource
-  #   Properties:
-  #     RestApiId: !Ref NFTsGalleryApi
-  #     ParentId: !GetAtt NFTsGalleryApi.RootResourceId
-  #     PathPart: getNFTsInfura
+  # Protected API Method executing a Lambda function
+  # We pass the API keys as envirionement variables
+  GetFromLambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - getFromLambdaFunction
+      Handler: src/handlers/getFromLambda.handler
+      MemorySize: 256
+      Environment:
+        Variables:
+          ALCHEMY_ETH_API_KEY: !Ref AlchemyEthAPIKey
+          MORALIS_API_KEY: !Ref MoralisAPIKey
+          INFURA_API_KEY: !Ref InfuraAPIKey
+      Description: Test Lambda for authenticated API calls. Logs context and event. Can be called only with Authenticated Role
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /getFromLambda
+            Method: GET
+            RestApiId: !Ref NFTsGalleryApi # We attach our Lambda to our existing API
 
-  # # Public API OPTIONS method to /getNFTs  (to allow CORS)
-  # GetNFTsInfuraOPTIONSMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     AuthorizationType: NONE
-  #     RestApiId: !Ref NFTsGalleryApi
-  #     ResourceId: !Ref GetNFTsInfuraResource
-  #     HttpMethod: OPTIONS
-  #     Integration:
-  #       Type: MOCK
-  #       PassthroughBehavior: NEVER
-  #       RequestTemplates:
-  #         application/json: '{"statusCode": 200}'
-  #       IntegrationResponses:
-  #         - StatusCode: "200"
-  #           ResponseParameters:
-  #             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #             method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
-  #             method.response.header.Access-Control-Allow-Origin: "'*'"
-  #           ResponseTemplates:
-  #             application/json: ""
-  #     MethodResponses:
-  #       - StatusCode: "200"
-  #         ResponseModels:
-  #           application/json: !Ref EmptyModel
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: false
-  #           method.response.header.Access-Control-Allow-Methods: false
-  #           method.response.header.Access-Control-Allow-Origin: false
+  ## 
+  ## CORS Proxy API /corsProxy
+  ## Used to proxy http to different domains in order to get the NFT .json metadata files 
+  ##
 
-  # # Protected API GET method to get NFTs from Infura (/getNFTsInfura). Passthrough API Gateway Proxy. No Lambda.
-  # GetNFTsInfuraGETMethod:
-  #   Type: AWS::ApiGateway::Method
-  #   Properties:
-  #     RestApiId: !Ref NFTsGalleryApi
-  #     ResourceId: !Ref GetNFTsInfuraResource
-  #     HttpMethod: GET
-  #     AuthorizationType: COGNITO_USER_POOLS
-  #     AuthorizerId: !Ref NFTGalleryAPICognitoAuthorizer
-  #     Integration:
-  #       Type: HTTP
-  #       IntegrationHttpMethod: GET
-  #       PassthroughBehavior: NEVER
-  #       # We inject the Infura URL containing the API Key from our prod.parameters file
-  #       Uri: !Join
-  #         - "/"
-  #         - - !Ref InfuraEthUrl
-  #           - getNFTs
-  #       # Here we override the querystring parameter 'owner' to inject the user's wallet address
-  #       RequestTemplates:
-  #         application/json: |
-  #           #set($address = $context.authorizer.claims['cognito:username'])
-  #           #set($context.requestOverride.querystring.owner = $address)
-  #           $input.json("$")
-  #       IntegrationResponses:
-  #         - StatusCode: "200"
-  #           ResponseParameters:
-  #             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #             method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
-  #             method.response.header.Access-Control-Allow-Origin: "'*'"
-  #         - StatusCode: "500"
-  #           ResponseParameters:
-  #             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-  #             method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
-  #             method.response.header.Access-Control-Allow-Origin: "'*'"
-  #     MethodResponses:
-  #       - StatusCode: "200"
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: false
-  #           method.response.header.Access-Control-Allow-Methods: false
-  #           method.response.header.Access-Control-Allow-Origin: false
-  #       - StatusCode: "500"
-  #         ResponseParameters:
-  #           method.response.header.Access-Control-Allow-Headers: false
-  #           method.response.header.Access-Control-Allow-Methods: false
-  #           method.response.header.Access-Control-Allow-Origin: false
+  CorsProxyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join
+        - "-"
+        - - !Ref "AWS::StackName"
+          - corsProxy
+      Handler: src/handlers/corsProxy.handler
+      MemorySize: 256
+      Description: |
+        Provides an endpoint to get files through a controlled domain and allow CORS requests to different domains. 10MB payload max.
+        Used to get the .json NFT metadata files from different domains if they are not on IPFS...
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /corsProxy
+            Method: GET
+            RestApiId: !Ref NFTsGalleryApi # We attach our Lambda to our existing API
 
   ##
   ## Lambda triggers for custom auth
@@ -518,8 +460,6 @@ Resources:
         - - !Ref "AWS::StackName"
           - DefineAuthChallengeFunction
       Handler: src/handlers/defineAuthChallenge.handler
-      Architectures:
-        - x86_64
       MemorySize: 256
       Description: Lambda function - Cognito Trigger to define Auth Challenge
       Events:
@@ -537,8 +477,6 @@ Resources:
         - - !Ref "AWS::StackName"
           - CreateAuthChallengeFunction
       Handler: src/handlers/createAuthChallenge.handler
-      Architectures:
-        - x86_64
       MemorySize: 256
       Description: Lambda function - Cognito Trigger to creates Auth Challenge
       Events:
@@ -556,8 +494,6 @@ Resources:
         - - !Ref "AWS::StackName"
           - VerifyAuthChallengeResponseFunction
       Handler: src/handlers/verifyAuthChallengeResponse.handler
-      Architectures:
-        - x86_64
       MemorySize: 256
       Description: Lambda function - Cognito Trigger to verify Auth Challenge response
       Events:
@@ -575,8 +511,6 @@ Resources:
         - - !Ref "AWS::StackName"
           - PreSignupFunction
       Handler: src/handlers/preSignUp.handler
-      Architectures:
-        - x86_64
       MemorySize: 256
       Description: Lambda function - Cognito Trigger before signup
       Events:

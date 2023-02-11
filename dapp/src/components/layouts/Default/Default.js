@@ -14,9 +14,9 @@ export default function Default({ children, pageName }) {
                 <meta name="twitter:card" content="summary_large_image" />
             </Head>
             <Header />
-            <div className="container mx-auto">
-                {children}
-            </div>
+                <div className="bg-[#374151] pt-10 pb-10">
+                    {children}
+                </div>
             <Footer />
         </div>
     );
