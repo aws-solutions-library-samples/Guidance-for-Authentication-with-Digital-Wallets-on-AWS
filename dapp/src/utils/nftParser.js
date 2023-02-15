@@ -10,7 +10,7 @@ const sortNFTCards = (nfts) => {
 }
 
 export const processMoralisNFTs = async (apiResult) => {
-    if (!apiResult?.result.length) {
+    if (!apiResult?.result?.length) {
       return;
     }
 
@@ -55,7 +55,7 @@ export const processMoralisNFTs = async (apiResult) => {
 }
 
 export const processAlchemyNFTs = async (apiResult) => {
-    if (!apiResult?.ownedNfts.length) {
+    if (!apiResult?.ownedNfts?.length) {
       return;
     }
 

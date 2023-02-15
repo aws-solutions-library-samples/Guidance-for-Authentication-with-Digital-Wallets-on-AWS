@@ -1,7 +1,6 @@
 {
     "queryStringParameters": {
-        "action": "getNFTs",
-        "provider": "Alchemy"
+        "action": "getNFTs"
     },
     "requestContext": {
         "authorizer": {

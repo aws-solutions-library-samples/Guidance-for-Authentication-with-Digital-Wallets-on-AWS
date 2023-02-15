@@ -1,7 +1,6 @@
 {
     "queryStringParameters": {
-        "action": "getNFTs",
-        "provider": "Moralis"
+        "action": "getNFTs"
     },
     "requestContext": {
         "authorizer": {
