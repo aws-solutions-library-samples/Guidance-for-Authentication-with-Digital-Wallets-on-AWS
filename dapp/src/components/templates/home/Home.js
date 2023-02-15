@@ -27,12 +27,42 @@ const Home = () => {
             setNftCards(null);
     },[user])
 
-    // Test for getNFTs Alchemy HTTP passthrough
-    const onGetFromAlchemyProxy = async () => {
+    // API call to Alchemy Lambda
+    const onGetNFTsAlchemyLambda = async (action) => {
+        try {
+            const provider = { name: 'Alchemy', src: '/alchemy.png' };
+            setLoading(true);
+            setProvider(provider);
+            setType("Lambda");
+            setNftCards([]);
+            const myInit = {
+                queryStringParameters: {
+                    provider: provider.name,
+                    action: action
+                }
+            };
+            const result = await getHttp('/getNFTsAlchemyLambda', myInit);
+            console.log(result);
+            setNftCards(await processAlchemyNFTs(result));
+            setLoading(false);
+        }
+        catch (e) {
+            setLoading(false);
+            console.log(e);
+            const error = e?.message;
+            if (!error)
+                error = e;
+            alert("Something went wrong...\n" + error);
+        }
+    }
+
+        // Test for getNFTs Alchemy HTTP passthrough
+    const onGetNFTsAlchemy = async () => {
         try {
             setLoading(true);
             setProvider({ name: 'Alchemy', src: '/alchemy.png' });
             setType("Proxy");
+            setNftCards([]);
             const result = await getHttp('/getNFTsAlchemy');
             console.log(result);
             setNftCards(await processAlchemyNFTs(result));
@@ -48,24 +78,23 @@ const Home = () => {
         }
     }
 
-    // Test for call to Lamnda
-    const onGetFromLambda = async (provider, action) => {
+    // API call to Moralis Lambda
+    const onGetNFTsMoralisLambda = async (action) => {
         try {
+            const provider = { name: 'Moralis', src: '/Moralis.png' };
             setLoading(true);
             setProvider(provider);
             setType("Lambda");
+            setNftCards([]);
             const myInit = {
                 queryStringParameters: {
                     provider: provider.name,
                     action: action
                 }
             };
-            const result = await getHttp('/getFromLambda', myInit);
+            const result = await getHttp('/getNFTsMoralisLambda', myInit);
             console.log(result);
-            if (provider == 'Alchemy')
-                setNftCards(await processAlchemyNFTs(result));
-            else if (provider == 'Moralis')
-                setNftCards(await processMoralisNFTs(result));
+            setNftCards(await processMoralisNFTs(result));
             setLoading(false);
         }
         catch (e) {
@@ -78,12 +107,13 @@ const Home = () => {
         }
     }
 
-    // Test for getNFTs Moralis HTTP passthrough
-    const onGetFromMoralisProxy = async () => {
+    // API call getNFTs to Moralis using API Gateway HTTP passthrough
+    const onGetNFTsMoralis = async () => {
         try {
             setLoading(true);
             setProvider({ name: 'Moralis', src: '/moralis.png' });
-            setType("Proxy");            
+            setType("Proxy");
+            setNftCards([]);            
             const myInit = {
                 queryStringParameters: {
                     chain: 'eth',
@@ -104,15 +134,39 @@ const Home = () => {
         }
     }
 
-    // Test for getNFTsCollection Alchemy HTTP passthrough
+    // API call getNFTsCollection to Alchemy using Lambda
+    const onGetCollectionAlchemyLambda = async () => {
+        try {
+            // TODO
+            setLoading(true);
+            setProvider({ name: 'Alchemy', src: '/alchemy.png' });
+            setType("Lambda");
+            setNftCards([]);
+            const result = await getHttp('/getCollectionAlchemyLambda');
+            console.log(result);
+            setNFTs(result);
+            setLoading(false);
+        }
+        catch (e) {
+            setLoading(false);
+            console.error(e);
+            const error = e?.message;
+            if (!error)
+                error = e;
+            alert("Something went wrong...\n" + error);
+        }
+    }
+
+    // API call getNFTsCollection to Alchemy using API Gateway HTTP passthrough
     const onGetCollectionAlchemyProxy = async () => {
         try {
             // TODO
             setLoading(true);
+            setProvider({ name: 'Alchemy', src: '/alchemy.png' });
+            setType("Proxy");
             const result = await getHttp('/getCollectionAlchemy');
             console.log(result);
             setNFTs(result);
-            setType("Proxy");
             setLoading(false);
         }
         catch (e) {
@@ -137,12 +191,12 @@ const Home = () => {
                     </div>
                     <div className="flex-none">
                         <button className="text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={onGetCollectionAlchemyProxy}>
-                            /getFromProxy
+                            From HTTP Proxy
                         </button>
                     </div>
                     <div className="flex-none">
-                        <button className="text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={() => onGetFromLambda({ name: 'Alchemy', src: '/alchemy.png' }, "getCollection")}>
-                            /getFromLambda
+                        <button className="text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={() => onGetCollectionAlchemyLambda("getCollection")}>
+                            From Lambda
                         </button>
                     </div>
                 </div>
@@ -162,13 +216,13 @@ const Home = () => {
                         </div>
                         <div className="flex-auto mt-2 items-start flex-col gap-2">
                             <div>
-                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={onGetFromAlchemyProxy}>
-                                    /getFromProxy
+                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={onGetNFTsAlchemy}>
+                                    From HTTP Proxy
                                 </button>
                             </div>
                             <div className="mt-2">
-                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={() => onGetFromLambda({ name: 'Alchemy', src: '/alchemy.png' }, "getNFTs")}>
-                                    /getFromLambda
+                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={() => onGetNFTsAlchemyLambda("getNFTs")}>
+                                    From Lambda
                                 </button>
                             </div>
                         </div>
@@ -183,13 +237,13 @@ const Home = () => {
                         </div>
                         <div className="flex-auto mt-2 items-start flex-col gap-2">
                             <div>
-                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={onGetFromMoralisProxy}>
-                                    /getFromProxy
+                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={onGetNFTsMoralis}>
+                                    From HTTP Proxy
                                 </button>
                             </div>
                             <div className="mt-2">
-                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={() => onGetFromLambda({ name: 'Moralis', src: '/moralis.png' }, "getNFTs")}>
-                                    /getFromLambda
+                                <button className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded" disabled={loading} onClick={() => onGetNFTsMoralisLambda("getNFTs")}>
+                                    From Lambda
                                 </button>
                             </div>
                         </div>

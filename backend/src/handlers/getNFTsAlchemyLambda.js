@@ -1,6 +1,4 @@
 import { Network, Alchemy } from 'alchemy-sdk';
-import Moralis from 'moralis';
-import { EvmChain } from '@moralisweb3/evm-utils';
 
 const headers = {
     "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers",
@@ -15,9 +13,10 @@ const settings = {
 };
 const alchemy = new Alchemy(settings);
 
-async function alchemyActions(username, action, chain = EvmChain.ETHEREUM) {
+const alchemyActions = async (username, action) => {
     switch (action) {
         case 'getNFTs':
+            console.log("GO getNftsForOwner");
             return await alchemy.nft.getNftsForOwner(username);
         case 'getCollection':
             break;
@@ -26,50 +25,25 @@ async function alchemyActions(username, action, chain = EvmChain.ETHEREUM) {
     }
 }
 
-async function moralisActions(username, action, chain = EvmChain.ETHEREUM) {
-    console.log("GO Moralis");
-    switch (action) {
-        case 'getNFTs':
-            console.log("Moralis go init");
-
-            await Moralis.start({
-                apiKey: process.env.MORALIS_API_KEY
-            });
-            console.log("Moralis start done");
-
-            console.log("Moralis go get");
-            return await Moralis.EvmApi.nft.getWalletNFTs({
-                address: username,
-                chain,
-            });
-        default:
-            throw 'Unknown action: ' + action;
-    }
-}
-
 export const handler = async (event) => {
-    var username = event.requestContext.authorizer.claims["cognito:username"];
-    var output;
-
     try {
+        var username = event.requestContext.authorizer.claims["cognito:username"];
+        var output;
+
         console.log('Event: ', JSON.stringify(event, null, 2));
 
         if (!event?.queryStringParameters?.action)
             throw ('No action provided');
+        
+        // return {
+        //     headers,
+        //     statusCode: 200,
+        //     body: JSON.stringify(event),
+        // };
 
-        if (!event?.queryStringParameters?.provider)
-            throw ('No provider provided');
+        console.log("GO ALCHEMY");
+        output = await alchemyActions(username, event.queryStringParameters.action);
 
-        switch (event.queryStringParameters.provider) {
-            case 'Alchemy':
-                output = await alchemyActions(username, event.queryStringParameters.action);
-                break;
-            case 'Moralis':
-                output = await moralisActions(username, event.queryStringParameters.action);
-                break;
-            default:
-                throw ('Unknown provider: ' + event.queryStringParameters.provider);
-        }
         console.log("RESULT");
         console.log(JSON.stringify(output));
 

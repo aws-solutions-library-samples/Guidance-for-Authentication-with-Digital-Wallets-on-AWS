@@ -41,6 +41,14 @@ There are 5 API calls in this example:
    * **/getNFTsCollectionAlchemy** is accessible to any users, even anonymous users. All other API calls are protected and only available to Cognito authenticated users who have signed the blockchain transaction and received a valid identity and credentials. 
    * **/corsProxy** is used to get the NFT metadata `.json` files if they are not on IPFS. All Images located on other domains will be displayed thanks to the following nextJS configuration (see next.config.js):
 
+## Test Lambda locally
+
+For example to test the GetNFTsMoralisLambdaFunction you can run:
+
+`sam local invoke "GetNFTsMoralisLambdaFunction" -e events/event-getNFTs-moralis.json --env-vars env.json` 
+
+Rename the `env.json.sample` file, add your API keys to it and reference it in your `--env-vars` parameter.
+
 # Default README - SAM Template boilerplate
 
 This project contains source code and supporting files for a serverless application that you can deploy with the AWS Serverless Application Model (AWS SAM) command line interface (CLI). It includes the following files and folders:
