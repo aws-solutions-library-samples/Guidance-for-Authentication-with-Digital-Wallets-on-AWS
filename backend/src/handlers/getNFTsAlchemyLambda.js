@@ -13,36 +13,14 @@ const settings = {
 };
 const alchemy = new Alchemy(settings);
 
-const alchemyActions = async (username, action) => {
-    switch (action) {
-        case 'getNFTs':
-            console.log("GO getNftsForOwner");
-            return await alchemy.nft.getNftsForOwner(username);
-        case 'getCollection':
-            break;
-        default:
-            throw 'Unknown action: ' + action;
-    }
-}
-
 export const handler = async (event) => {
+    console.log('Event: ', JSON.stringify(event, null, 2));
+
     try {
         var username = event.requestContext.authorizer.claims["cognito:username"];
         var output;
-
-        console.log('Event: ', JSON.stringify(event, null, 2));
-
-        if (!event?.queryStringParameters?.action)
-            throw ('No action provided');
         
-        // return {
-        //     headers,
-        //     statusCode: 200,
-        //     body: JSON.stringify(event),
-        // };
-
-        console.log("GO ALCHEMY");
-        output = await alchemyActions(username, event.queryStringParameters.action);
+        output = await alchemy.nft.getNftsForOwner(username);
 
         console.log("RESULT");
         console.log(JSON.stringify(output));
