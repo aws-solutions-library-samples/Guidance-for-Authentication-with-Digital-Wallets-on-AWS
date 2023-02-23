@@ -17,33 +17,19 @@ const startMoralis = async () => {
   
 startMoralis();
 
-async function moralisActions(username, action) {
-    console.log("GO Moralis");
-    switch (action) {
-        case 'getNFTs':
-            console.log("Moralis go get");
-            return await Moralis.EvmApi.nft.getWalletNFTs({
-                address: username,
-                chain: Chains.EvmChain.ETHEREUM,
-            });
-        default:
-            throw 'Unknown action: ' + action;
-    }
-}
-
 module.exports.handler = async (event) => {
-    var username = event.requestContext.authorizer.claims["cognito:username"];
-    var output;
+    console.log("Events: ", JSON.stringify(event));
 
     try {
-        console.log("Events: ", JSON.stringify(event));
-
-        if (!event?.queryStringParameters?.action)
-            throw ('No action provided');
+        var username = event.requestContext.authorizer.claims["cognito:username"];
+        var output;
 
         const chain = (!event?.queryStringParameters?.chain ? Chains.EvmChain.ETHEREUM : event.queryStringParameters.chain);
 
-        output = await moralisActions(username, event.queryStringParameters.action);
+        output = await Moralis.EvmApi.nft.getWalletNFTs({
+            address: username,
+            chain: chain,
+        });
 
         console.log("RESULT");
         console.log(output);

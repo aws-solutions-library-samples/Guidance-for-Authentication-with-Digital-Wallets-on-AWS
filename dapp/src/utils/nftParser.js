@@ -1,5 +1,5 @@
 import { NFTCard } from '../components/modules/NFTCard';
-import {Agent} from '@zoralabs/nft-metadata';
+import { Agent } from '@zoralabs/nft-metadata';
 
 const sortNFTCards = (nfts) => {
   return [].concat(nfts)
@@ -54,7 +54,7 @@ export const processMoralisNFTs = async (apiResult) => {
     return(nftCards);
 }
 
-export const processAlchemyNFTs = async (apiResult) => {
+export const processAlchemyOwnedNfts = async (apiResult) => {
     if (!apiResult?.ownedNfts?.length) {
       return;
     }
@@ -84,4 +84,36 @@ export const processAlchemyNFTs = async (apiResult) => {
     const nftCards = sortNFTCards(nfts);
 
     return(nftCards);
+}
+
+export const processAlchemyNFTsForCollection = async (apiResult) => {
+  if (!apiResult?.nfts?.length) {
+    return;
+  }
+
+  // Reset list Items
+  let nfts = [];
+
+  // Iterate through the list of nfts
+  for (let i = 0; i < apiResult.nfts.length; i++) {
+    console.log(apiResult.nfts[i]);
+
+    // Alchemy provides NFT Metadata from JSON out of the box
+    // They also provide IPFS Gateway resolution and thumbnail feature
+    let myNftObj = {
+      id: apiResult.nfts[i]?.id?.tokenId,
+      title: apiResult.nfts[i]?.title,
+      description: apiResult.nfts[i]?.description,
+      thumbnail: (apiResult.nfts[i]?.media[0]?.thumbnail? apiResult.nfts[i]?.media[0]?.thumbnail : apiResult.nfts[i]?.media[0]?.gateway),
+      image: apiResult.nfts[i]?.media[0]?.gateway,
+      contract_type: (apiResult.nfts[i]?.contractMetadata? apiResult.nfts[i]?.contractMetadata.tokenType : apiResult.nfts[i]?.contract.tokenType),
+      symbol: (apiResult.nfts[i]?.contractMetadata? apiResult.nfts[i]?.contractMetadata.symbol : apiResult.nfts[i]?.contract.symbol),
+      amount: apiResult.nfts[i]?.balance
+    }
+    nfts.push(myNftObj);
+  }
+
+  const nftCards = sortNFTCards(nfts);
+
+  return(nftCards);
 }
