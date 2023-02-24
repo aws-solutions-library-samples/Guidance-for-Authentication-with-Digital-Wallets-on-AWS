@@ -1,4 +1,4 @@
-import { Amplify, Auth } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 
 import { createClient, configureChains, defaultChains, WagmiConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
@@ -80,3 +80,4 @@ function MyApp({ Component, pageProps }) {
 }
 
 export default MyApp;
+
