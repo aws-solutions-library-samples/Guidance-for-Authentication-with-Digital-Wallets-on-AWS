@@ -4,11 +4,12 @@ export async function getHttp(path, myInit, anonymous = false) {
     (!myInit && (myInit = {}));
     (!myInit.headers && (myInit.headers = {}));
 
-    // All routes are restricted and use the UserPool as authorizer BUT:
-    //    * /getNFTsCollectionAlchemy
-    // These route uses the AWS_IAM Authorizer
-    // The Cognito IdentityPool is used to get temporary AWS Crendetials
-
+    /* 
+       All routes are restricted and use the UserPool as authorizer BUT:
+        * /getNFTsCollectionAlchemy
+       These route uses the AWS_IAM Authorizer
+       The Cognito IdentityPool is used to get temporary AWS Crendetials 
+    */
     if (!anonymous) {
         // By default we use the token return by the UserPool to authorize access to our API routes. 
 

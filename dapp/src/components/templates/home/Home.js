@@ -1,4 +1,3 @@
-import { useAccount } from 'wagmi';
 import { useState, useEffect, useContext } from 'react';
 import { checkUser } from 'utils/user';
 import { getHttp } from 'utils/api';
@@ -14,7 +13,6 @@ const Home = () => {
     const [type, setType] = useState(null);
     const [loading, setLoading] = useState(false);
     const [contract, setContract] = useState('');
-    // const { isConnected } = useAccount();
 
     useEffect(() => {
         checkUser(setUser);

@@ -74,7 +74,7 @@ Resources:
   # If you change the API definition or a mapping template, you will need to force redeploy the stage
   # This can also be done through CLI, CI/CD pipeline, SDK or in the console.
   # If you have problem. Delete the stack and recreate it OR make the change by hand in the AWS console and re-deploy to the stage by hand.
-  NFTsGalleryApiDeployment45:
+  NFTsGalleryApiDeployment46:
     DependsOn:
       - GetNFTsAlchemyOPTIONSMethod
       - GetNFTsAlchemyLambdaFunction
@@ -474,6 +474,8 @@ Resources:
         ApiEvent:
           Type: Api
           Properties:
+            Auth:
+              Authorizer: NONE
             Path: /corsProxy
             Method: GET
             RestApiId: !Ref NFTsGalleryApi # We attach our Lambda to our existing API

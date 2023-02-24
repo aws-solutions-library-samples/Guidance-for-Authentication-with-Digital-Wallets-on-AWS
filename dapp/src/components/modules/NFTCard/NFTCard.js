@@ -23,24 +23,6 @@ const NFTCard = ({ nft }) => {
           </div>
           <Eth fontSize="20px flex-none" />
         </div>
-        {/* <div className="flex flex-row gap-2 rounded mt-2">
-          <div>
-            <div className="flex-1 font-medium text-sm">
-              Symbol
-            </div>
-            <div className="font-small font-bold">
-              {nft.symbol}
-            </div>
-          </div>
-          <div>
-            <div className="flex-1 font-medium text-sm ">
-              Amount
-            </div>
-            <div className="font-small font-bold">
-              {nft.amount}
-            </div>
-          </div>
-        </div> */}
       </div>
     </>
   );

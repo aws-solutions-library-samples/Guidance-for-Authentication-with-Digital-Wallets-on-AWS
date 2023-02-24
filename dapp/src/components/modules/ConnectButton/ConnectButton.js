@@ -8,7 +8,7 @@ import { checkUser, handleAmplifySignIn } from 'utils/user';
 
 import { Auth } from 'aws-amplify';
 
-import ContextProvider, { GlobalContext } from 'context/UserContext';
+import { GlobalContext } from 'context/UserContext';
 
 const ConnectButton = () => {
   const [user, setUser] = useContext(GlobalContext);
@@ -63,13 +63,6 @@ const ConnectButton = () => {
     } catch (e) {
       console.error(e);
       alert('Something went wrong...\n' + (e)?.message);
-      // toast({
-      //   title: 'Something went wrong...',
-      //   description: (e)?.message,
-      //   status: 'error',
-      //   position: 'top-right',
-      //   isClosable: true,
-      // });
     }
 
     setLoading(false);
@@ -87,10 +80,6 @@ const ConnectButton = () => {
 
   if (user) {
     return (
-      // <HStack onClick={onSignOut} cursor={'pointer'}>
-      //   <Avatar size="xs" />
-      //   <Text fontWeight="medium">{getEllipsisTxt(user.username)}</Text>
-      // </HStack>
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={onSignOut} cursor={'pointer'}>
         {getEllipsisTxt(user.username)}
       </button>

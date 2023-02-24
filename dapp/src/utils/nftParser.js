@@ -1,5 +1,7 @@
 import { NFTCard } from '../components/modules/NFTCard';
-import { Agent } from '@zoralabs/nft-metadata';
+// import { Agent } from '@zoralabs/nft-metadata';
+import { FetchWrapper } from "use-nft"
+
 
 const sortNFTCards = (nfts) => {
   return [].concat(nfts)
@@ -14,22 +16,27 @@ export const processMoralisNFTs = async (apiResult) => {
       return;
     }
 
-    let nfts = [];
+    const ethereum = window.ethereum;
 
-    // To store the list of NFTs to display
-    // Agent to resolve JSON metadata files
-    const parser = new Agent({
-        // Use ethers.js Networkish here: numbers (1/4) or strings (homestead/rinkeby) work here
-        network: 'mainnet',
-        // Timeout: defaults to 40 seconds, recommended timeout is 60 seconds (in milliseconds)
-        timeout: 60 * 1000,
+    // Used to fetch metadata when using Moralis
+    const fetcher = ["ethereum", { ethereum }];
+    const fetchWrapper = new FetchWrapper(fetcher, {
+      jsonProxy: (url) => { 
+        return process.env.NEXT_PUBLIC_CORS_PROXY + url;
+      },
+      ipfsUrl: (cid, path = "") => {
+        return `https://ipfs.io/ipfs/${cid}${path}`
+      }
     })
+
+    let nfts = [];
 
     // Iterate through the list of nfts coming from Moralis and
     // fetch the JSON metadata file for each NFT in parralel using Promises
     await Promise.all(apiResult.result.map(async nft => {
       console.log(nft);
 
+      // We only get basic token metadata from Moralis
       let myNftObj = {
         id: nft.token_id,
         contract_type: nft.contract_type,
@@ -37,12 +44,27 @@ export const processMoralisNFTs = async (apiResult) => {
         amount: nft.amount
       }
 
-      await parser.fetchMetadata(nft.token_address, nft.token_id).then((data) => {
-        console.log("After NFT lookup:", data);
-        myNftObj.description = data?.description;
-        myNftObj.title = data?.name;
-        myNftObj.thumbnail = data?.imageURL;
-      })
+      try {
+        // We need to fetch the .json file associated with the token to get the rest of the metadata
+        const result = await fetchWrapper.fetchNft(
+          nft.token_address,
+          nft.token_id
+        )
+
+        // console.log("result", result);
+      
+        // nft.error is an Error instance in case of error.
+        if (!result) 
+          throw ("Error getting NFT Metadata: " + result);
+      
+        // Enrishing our object with what we extracted from the .json file
+        myNftObj.description = result.description;
+        myNftObj.title = result.name;
+        myNftObj.thumbnail = result.image;
+      }
+      catch (e) {
+        console.log(e);
+      }
 
       console.log("Pushing");
       nfts.push(myNftObj);

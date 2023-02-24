@@ -1,17 +1,6 @@
-'use strict';
+import fetch from 'node-fetch';
 
-const fetch = require('node-fetch');
-
-/**
- * Use this command to launch the handler from console:
- *
- * node_modules/.bin/serverless invoke local -f lambda -d '{"httpMethod":"GET","queryStringParameters":{"url":"http://github.com"}}'
- *
- *  or from browser
- *
- * http://localhost:3000/?url=https://github.com
- */
-export const corsProxy = async (event) => {
+export const handler = async (event) => {
   return new Promise(async (resolve, reject) => {
     let params = event.queryStringParameters;
     let { Host, host, Origin, origin, ...headers } = event.headers;
