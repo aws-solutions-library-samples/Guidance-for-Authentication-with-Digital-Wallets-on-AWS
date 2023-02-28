@@ -3,3 +3,5 @@ node_modules
 prod.parameters
 env.json
 .DS_Store
+samconfig.toml
+
