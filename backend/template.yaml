@@ -710,15 +710,18 @@ Resources:
 
 # Stack output
 Outputs:
-  ApiEndpoint:
-    Description: "API Gateway endpoint URL for Prod stage"
-    Value: !Sub "https://${NFTsGalleryApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
-  CognitoUserPool:
+  ApiGatewayId:
+    Description: "ID of your API Gateway"
+    Value: !Sub "${NFTsGalleryApi}"
+  ApiGatewayEndpoint:
+    Description: "API Gateway endpoint URL for 'prod' stage"
+    Value: !Sub "https://${NFTsGalleryApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+  CognitoUserPoolId:
     Description: "ID of the Cognito User Pool"
     Value: !Ref CognitoUserPool
-  CognitoUserPoolWebClient:
-    Description: "Client ID associated to the Cognito UserPool"
+  CognitoUserPoolWebClientId:
+    Description: "Client ID associated to the Cognito UserPool Web Client"
     Value: !Ref CognitoUserPoolWebClient
-  CognitoIdentityPool:
-    Description: "ID of the Cognito Identity Pool used to get credentials"
+  CognitoIdentityPoolId:
+    Description: "ID of the Cognito Identity Pool"
     Value: !Ref CognitoIdentityPool
