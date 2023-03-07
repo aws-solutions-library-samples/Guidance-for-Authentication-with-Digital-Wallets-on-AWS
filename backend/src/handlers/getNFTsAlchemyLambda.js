@@ -6,7 +6,6 @@ const headers = {
     'Access-Control-Allow-Origin': "*",
 };
 
-// Env variables are passed to the Lambda function
 const settings = {
     apiKey: process.env.ALCHEMY_ETH_API_KEY,
     network: Network.ETH_MAINNET
@@ -14,7 +13,7 @@ const settings = {
 const alchemy = new Alchemy(settings);
 
 export const handler = async (event) => {
-    console.log('Event: ', JSON.stringify(event, null, 2));
+    console.log("Event: ", JSON.stringify(event, null, 2));
 
     try {
         var username = event.requestContext.authorizer.claims["cognito:username"];
@@ -22,8 +21,7 @@ export const handler = async (event) => {
         
         output = await alchemy.nft.getNftsForOwner(username);
 
-        console.log("RESULT");
-        console.log(JSON.stringify(output));
+        console.log("RESULT: ", JSON.stringify(output));
 
         return {
             headers,
@@ -31,8 +29,7 @@ export const handler = async (event) => {
             body: JSON.stringify(output),
         };
     } catch (error) {
-        console.log("ERROR");
-        console.log(JSON.stringify(error));
+        console.log("ERROR: ", JSON.stringify(error));
         return {
             headers,
             statusCode: 500,

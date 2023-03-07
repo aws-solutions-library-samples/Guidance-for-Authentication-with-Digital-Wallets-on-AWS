@@ -1,7 +1,5 @@
 import { NFTCard } from '../components/modules/NFTCard';
-// import { Agent } from '@zoralabs/nft-metadata';
 import { FetchWrapper } from "use-nft"
-
 
 const sortNFTCards = (nfts) => {
   return [].concat(nfts)
@@ -18,10 +16,10 @@ export const processMoralisNFTs = async (apiResult) => {
 
     const ethereum = window.ethereum;
 
-    // Used to fetch metadata when using Moralis
     const fetcher = ["ethereum", { ethereum }];
     const fetchWrapper = new FetchWrapper(fetcher, {
-      jsonProxy: (url) => { 
+      jsonProxy: (url) => {
+        // Here we use our CORS proxy to avoid CORS issues
         return process.env.NEXT_PUBLIC_CORS_PROXY + url;
       },
       ipfsUrl: (cid, path = "") => {
@@ -45,15 +43,12 @@ export const processMoralisNFTs = async (apiResult) => {
       }
 
       try {
-        // We need to fetch the .json file associated with the token to get the rest of the metadata
+        // We fetch the .json file associated with the token to get the rest of the metadata
         const result = await fetchWrapper.fetchNft(
           nft.token_address,
           nft.token_id
         )
 
-        // console.log("result", result);
-      
-        // nft.error is an Error instance in case of error.
         if (!result) 
           throw ("Error getting NFT Metadata: " + result);
       
@@ -66,7 +61,6 @@ export const processMoralisNFTs = async (apiResult) => {
         console.log(e);
       }
 
-      console.log("Pushing");
       nfts.push(myNftObj);
 
     }));

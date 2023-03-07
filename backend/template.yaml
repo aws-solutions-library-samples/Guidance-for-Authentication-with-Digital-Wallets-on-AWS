@@ -5,7 +5,7 @@
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  NFTsGallery
+  NFT Gallery
 
 # Transform section specifies one or more macros that AWS CloudFormation uses to process your template
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
@@ -66,15 +66,15 @@ Resources:
     Type: AWS::ApiGateway::Model
     Properties:
       ContentType: "application/json"
-      RestApiId: !Ref NFTsGalleryApi
+      RestApiId: !Ref Api
       Schema: {}
 
-  # To force a redeployment of the API Gateway stage, change the number at the end of this resources name 'NFTsGalleryApiDeployment${randomNumber}'
+  # To force a redeployment of the API Gateway stage, change the number at the end of this resources name 'ApiDeployment${randomNumber}'
   # SAM will create this deployment resource only the first time so this hack forces a redeploy
   # If you change the API definition or a mapping template, you will need to force redeploy the stage
   # This can also be done through CLI, CI/CD pipeline, SDK or in the console.
   # If you have problem. Delete the stack and recreate it OR make the change by hand in the AWS console and re-deploy to the stage by hand.
-  NFTsGalleryApiDeployment46:
+  ApiDeployment46:
     DependsOn:
       - GetNFTsAlchemyOPTIONSMethod
       - GetNFTsAlchemyLambdaFunction
@@ -87,13 +87,13 @@ Resources:
       - CorsProxyFunction
     Type: "AWS::ApiGateway::Deployment"
     Properties:
-      RestApiId: !Ref NFTsGalleryApi
+      RestApiId: !Ref Api
       Description: Prod stage for NFT API
       StageName: prod
 
   # Cognito authorizer which will check our ID Token and grant authenticated users access to our API methods
   # This is used by GET Methods HTTP proxy
-  NFTGalleryAPICognitoAuthorizer:
+  APICognitoAuthorizer:
     Type: AWS::ApiGateway::Authorizer
     Properties:
       IdentitySource: method.request.header.Authorization
@@ -101,13 +101,13 @@ Resources:
         - "-"
         - - !Ref "AWS::StackName"
           - CognitoAuthorizer
-      RestApiId: !Ref NFTsGalleryApi
+      RestApiId: !Ref Api
       Type: COGNITO_USER_POOLS
       ProviderARNs:
         - !GetAtt CognitoUserPool.Arn
 
   # The Api Gateway resource
-  NFTsGalleryApi:
+  Api:
     Type: AWS::Serverless::Api
     Properties:
       Name: !Join
@@ -117,9 +117,9 @@ Resources:
       StageName: prod
       Description: NFT Gallery API Gateway
       Auth:
-        DefaultAuthorizer: NFTGalleryAPICognitoAuthorizer
+        DefaultAuthorizer: APICognitoAuthorizer
         Authorizers:
-          NFTGalleryAPICognitoAuthorizer:
+          APICognitoAuthorizer:
             UserPoolArn: !GetAtt CognitoUserPool.Arn
             Identity:
               Header: Authorization
@@ -133,8 +133,8 @@ Resources:
   GetNFTsCollectionAlchemyResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      RestApiId: !Ref NFTsGalleryApi
-      ParentId: !GetAtt NFTsGalleryApi.RootResourceId
+      RestApiId: !Ref Api
+      ParentId: !GetAtt Api.RootResourceId
       PathPart: getNFTsCollectionAlchemy
 
   # Public API OPTIONS method to /getNFTsCollectionAlchemy  (to allow CORS)
@@ -142,7 +142,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
-      RestApiId: !Ref NFTsGalleryApi
+      RestApiId: !Ref Api
       ResourceId: !Ref GetNFTsCollectionAlchemyResource
       HttpMethod: OPTIONS
       Integration:
@@ -173,7 +173,7 @@ Resources:
   GetNFTsCollectionAlchemyGETMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      RestApiId: !Ref NFTsGalleryApi
+      RestApiId: !Ref Api
       ResourceId: !Ref GetNFTsCollectionAlchemyResource
       HttpMethod: GET
       AuthorizationType: AWS_IAM
@@ -223,8 +223,8 @@ Resources:
   GetNFTsAlchemyResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      RestApiId: !Ref NFTsGalleryApi
-      ParentId: !GetAtt NFTsGalleryApi.RootResourceId
+      RestApiId: !Ref Api
+      ParentId: !GetAtt Api.RootResourceId
       PathPart: getNFTsAlchemy
 
   # Public API OPTIONS method to /getNFTs (to allow CORS)
@@ -232,7 +232,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
-      RestApiId: !Ref NFTsGalleryApi
+      RestApiId: !Ref Api
       ResourceId: !Ref GetNFTsAlchemyResource
       HttpMethod: OPTIONS
       Integration:
@@ -263,11 +263,11 @@ Resources:
   GetNFTsAlchemyGETMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      RestApiId: !Ref NFTsGalleryApi
+      RestApiId: !Ref Api
       ResourceId: !Ref GetNFTsAlchemyResource
       HttpMethod: GET
       AuthorizationType: COGNITO_USER_POOLS
-      AuthorizerId: !Ref NFTGalleryAPICognitoAuthorizer
+      AuthorizerId: !Ref APICognitoAuthorizer
       Integration:
         Type: HTTP
         IntegrationHttpMethod: GET
@@ -327,7 +327,7 @@ Resources:
           Properties:
             Path: /getNFTsAlchemyLambda
             Method: GET
-            RestApiId: !Ref NFTsGalleryApi # We attach our Lambda to our existing API
+            RestApiId: !Ref Api # We attach our Lambda to our existing API
 
 
   ###
@@ -338,8 +338,8 @@ Resources:
   GetNFTsMoralisResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      RestApiId: !Ref NFTsGalleryApi
-      ParentId: !GetAtt NFTsGalleryApi.RootResourceId
+      RestApiId: !Ref Api
+      ParentId: !GetAtt Api.RootResourceId
       PathPart: getNFTsMoralis
 
   # Public API OPTIONS method to /getNFTs (to allow CORS)
@@ -347,7 +347,7 @@ Resources:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
-      RestApiId: !Ref NFTsGalleryApi
+      RestApiId: !Ref Api
       ResourceId: !Ref GetNFTsMoralisResource
       HttpMethod: OPTIONS
       Integration:
@@ -378,11 +378,11 @@ Resources:
   GetNFTsMoralisGETMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      RestApiId: !Ref NFTsGalleryApi
+      RestApiId: !Ref Api
       ResourceId: !Ref GetNFTsMoralisResource
       HttpMethod: GET
       AuthorizationType: COGNITO_USER_POOLS
-      AuthorizerId: !Ref NFTGalleryAPICognitoAuthorizer
+      AuthorizerId: !Ref APICognitoAuthorizer
       RequestParameters: 
         method.request.querystring.chain: false
       Integration:
@@ -395,15 +395,12 @@ Resources:
           integration.request.path.address: "'placeholder'"
           integration.request.querystring.chain: 'method.request.querystring.chain'
         # Here we inject the Moralis API key in the header
-        # We also override the path to the HTTP integration to inject the user wallet address
+        # We also inject the user wallet address in the {address} variable located in the HTTP Integration URI
         RequestTemplates:
           application/json: !Sub |
             #set($address = $context.authorizer.claims['cognito:username'])
             #set($context.requestOverride.header.X-API-Key = '${MoralisAPIKey}')
             #set($context.requestOverride.path.address = $address)
-            #if(!$input.params('chain'))
-              #set($context.requestOverride.querystring.chain = $input.params('chain'))
-            #end
             $input.json("$")
         IntegrationResponses:
           - StatusCode: "200"
@@ -449,7 +446,7 @@ Resources:
           Properties:
             Path: /getNFTsMoralisLambda
             Method: GET
-            RestApiId: !Ref NFTsGalleryApi # We attach our Lambda to our existing API
+            RestApiId: !Ref Api # We attach our Lambda to our existing API
 
 
   ## 
@@ -478,7 +475,7 @@ Resources:
               Authorizer: NONE
             Path: /corsProxy
             Method: GET
-            RestApiId: !Ref NFTsGalleryApi # We attach our Lambda to our existing API
+            RestApiId: !Ref Api # We attach our Lambda to our existing API
 
 
   ##
@@ -663,7 +660,6 @@ Resources:
                   - "execute-api:Invoke"
                 Resource:
                   - !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/getNFTsCollectionAlchemy"
-                  - !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/corsProxy"
 
   # AWS IAM Role for authenticated users
   CognitoUnAuthorizedRole:
@@ -706,16 +702,66 @@ Resources:
                   - "execute-api:Invoke"
                 Resource:
                   - !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/getNFTsCollectionAlchemy"
-                  - !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/GET/corsProxy"
+
+  ##
+  ## S3 bucket and CloudFront distribution 
+  ##
+
+  CloudFrontOriginAccessIdentity:
+    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: 'NFT Gallery'
+
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        DefaultRootObject: "index.html"
+        Comment: "Cloudfront distribution for NFT Gallery"
+        HttpVersion: http2
+        Enabled: true
+        Origins:
+          - Id: s3-webhost
+            DomainName: !GetAtt WebhostS3Bucket.DomainName
+            S3OriginConfig:
+              OriginAccessIdentity: 
+                Fn::Sub: 'origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}'
+        DefaultCacheBehavior:
+          Compress: true
+          TargetOriginId: s3-webhost
+          ViewerProtocolPolicy : redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+
+  WebhostS3Bucket:
+    Type: AWS::S3::Bucket
+
+  WebhostS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebhostS3Bucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: 's3:GetObject'
+            Resource:
+              - !Sub "arn:aws:s3:::${WebhostS3Bucket}/*"
+            Principal:
+              AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginAccessIdentity}"
 
 # Stack output
 Outputs:
   ApiGatewayId:
     Description: "ID of your API Gateway"
-    Value: !Sub "${NFTsGalleryApi}"
+    Value: !Sub "${Api}"
   ApiGatewayEndpoint:
     Description: "API Gateway endpoint URL for 'prod' stage"
-    Value: !Sub "https://${NFTsGalleryApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+    Value: !Sub "https://${Api}.execute-api.${AWS::Region}.amazonaws.com/prod"
   CognitoUserPoolId:
     Description: "ID of the Cognito User Pool"
     Value: !Ref CognitoUserPool

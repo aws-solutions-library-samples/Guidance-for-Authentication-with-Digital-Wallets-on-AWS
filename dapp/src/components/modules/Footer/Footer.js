@@ -1,9 +1,3 @@
-const links = {
-    github: 'https://github.com/ethereum-boilerplate/ethereum-boilerplate/',
-    forum: 'https://forum.moralis.io/',
-    moralis: 'https://moralis.io/?utm_source=boilerplatehosted&utm_medium=todo&utm_campaign=ethereum-boilerplat',
-};
-
 const Footer = () => {
     return (
         <nav className="bg-[#181e27] pb-10 pt-10 h-max">

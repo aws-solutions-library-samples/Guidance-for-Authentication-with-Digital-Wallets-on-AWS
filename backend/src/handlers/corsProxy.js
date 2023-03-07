@@ -33,7 +33,6 @@ export const handler = async (event) => {
         body: hasBody ? event.body : null,
         headers,
       });
-      console.log(`Got response from ${url} ---> {statusCode: ${res.status}}`);
 
       let proxyResponse = {
         statusCode: res.status,

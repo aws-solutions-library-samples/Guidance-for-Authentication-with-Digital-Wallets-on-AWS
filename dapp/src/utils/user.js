@@ -1,16 +1,5 @@
 import { Auth } from 'aws-amplify';
 
-export const checkUser = async (setUser) => {
-    try {
-        const _user = await Auth.currentAuthenticatedUser();
-        setUser(_user);
-        return _user;
-    } catch (err) {
-        setUser(null);
-        return null;
-    }
-};
-
 export const handleAmplifySignIn = async address => {
     try {
         const cognitoUser = await Auth.signIn(address);
@@ -25,13 +14,28 @@ export const handleAmplifySignIn = async address => {
                 username: address,
                 password: getRandomString(30),
             };
+
             await Auth.signUp(params);
             console.log("SignUp successful");
+
+            // We call the same function again
             return await handleAmplifySignIn(address);
         } else {
             console.log("Signin error");
             throw err;
         }
+    }
+};
+
+// We just set refresh token if needed and set our fresh user 
+export const checkUser = async (setUser) => {
+    try {
+        const _user = await Auth.currentAuthenticatedUser();
+        setUser(_user);
+        return _user;
+    } catch (err) {
+        setUser(null);
+        return null;
     }
 };
 
