@@ -18,7 +18,7 @@ const startMoralis = async () => {
 startMoralis();
 
 module.exports.handler = async (event) => {
-    console.log("Events: ", JSON.stringify(event));
+    console.log("EVENT: ", JSON.stringify(event));
 
     try {
         var username = event.requestContext.authorizer.claims["cognito:username"];
@@ -31,8 +31,7 @@ module.exports.handler = async (event) => {
             chain: chain,
         });
 
-        console.log("RESULT");
-        console.log(output);
+        console.log("RESULT: ", output);
 
         return {
             headers,
@@ -40,8 +39,7 @@ module.exports.handler = async (event) => {
             body: JSON.stringify(output),
         };
     } catch (error) {
-        console.log("ERROR");
-        console.log(JSON.stringify(error));
+        console.log("ERROR: ", JSON.stringify(error));
         return {
             headers,
             statusCode: 500,

@@ -1,16 +1,13 @@
 import { useState, useEffect, useContext } from 'react';
 import { useAccount, useConnect, useDisconnect, useSignMessage } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
-
 import { getEllipsisTxt } from 'utils/format';
-
 import { checkUser, handleAmplifySignIn } from 'utils/user';
-
 import { Auth } from 'aws-amplify';
-
 import { GlobalContext } from 'context/UserContext';
 
 const ConnectButton = () => {
+
   const [user, setUser] = useContext(GlobalContext);
   const [loading, setLoading] = useState(false);
 
@@ -18,13 +15,11 @@ const ConnectButton = () => {
   const { disconnectAsync } = useDisconnect();
   const { isConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
-  // const toast = useToast();
 
   useEffect(() => {
     checkUser(setUser);
-  }, [])
+  }, [setUser])
 
-  // When user click the Connect button
   const onSignIn = async () => {
     setLoading(true);
 
@@ -33,35 +28,36 @@ const ConnectButton = () => {
     }
 
     try {
-      // We connect to the blockchain to get wallet address and chain ID
+      // We connect to the blockchain and get wallet address and chain ID
       const { account, chain } = await connectAsync();
-
       const address = account.toLowerCase();
-      const cognitoUser = await handleAmplifySignIn(address);
-      console.log("User: ");
-      console.log(cognitoUser);
-      const message = cognitoUser.challengeParam.message;
-      console.log("Message to sign: " + message);
 
-      // Request to user to Sign the message on the blockchain
+      // We signin or sigup the user. See utils/user.js
+      const cognitoUser = await handleAmplifySignIn(address);
+      // console.log("user: ", cognitoUser);
+
+      // We get the message to sign
+      const message = cognitoUser.challengeParam.message;
+      // console.log("Message to sign: " + message);
+
+      // Request user to Sign the message using his crypto wallet and private key
       const signature = await signMessageAsync({ message });
 
-      console.log("Send challenge answer: " + cognitoUser + ":" + signature);
+      // We send the signature back to Cognito to complete the authentication process.
       await Auth.sendCustomChallengeAnswer(cognitoUser, signature)
         .then(async (user) => {
-          console.log('user after answer');
-          console.log(user);
+          // console.log("user:", user);
         })
         .catch((err) => {
           console.log(err);
           throw err;
         });
 
-      if (!await checkUser(setUser))
-        throw "Authentication failed"
-
+      if (!(await checkUser(setUser))) 
+        throw "Authentication failed";
     } catch (e) {
       console.error(e);
+      onSignOut();
       alert('Something went wrong...\n' + (e)?.message);
     }
 
