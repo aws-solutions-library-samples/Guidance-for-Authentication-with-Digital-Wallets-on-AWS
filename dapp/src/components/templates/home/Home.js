@@ -16,7 +16,7 @@ const Home = () => {
 
   useEffect(() => {
     checkUser(setUser);
-  }, []);
+  }, [setUser]);
 
   useEffect(() => {
     console.log("User Has changed", user);
@@ -176,7 +176,7 @@ const Home = () => {
           <div className="bg-[#181e27] p-2 flex-none rounded">
             <div className="flex flex-row">
               <div className="flex-none relative w-[22px] h-[20px] mr-1">
-                <Image layout="fill" src="/alchemy.png"></Image>
+                <Image alt="Alchemy logo" layout="fill" src="/alchemy.png"></Image>
               </div>
               <p className=" flex-none text-base font-bold">Alchemy</p>
             </div>
@@ -205,7 +205,7 @@ const Home = () => {
           <div className="bg-[#181e27] p-2 ml-2 flex-none rounded">
             <div className="flex flex-row">
               <div className="flex-none relative w-[22px] h-[20px] mr-1">
-                <Image layout="fill" src="/moralis.png"></Image>
+                <Image alt="Moralis logo" layout="fill" src="/moralis.png"></Image>
               </div>
               <p className="text-base font-bold">Moralis</p>
             </div>
@@ -237,7 +237,7 @@ const Home = () => {
         <div className={nftCards ? "mt-10 bg-[#181e27] rounded" : "hidden"}>
           <div className="p-4 flex flex-row ">
             <div className="flex-none relative w-[22px] h-[20px] mr-1">
-              <Image layout="fill" src={provider?.src}></Image>
+              <Image alt="Current Web3 provider logo" layout="fill" src={provider?.src}></Image>
             </div>
             <p className="text-base font-bold">
               Output from {provider?.name} {type}

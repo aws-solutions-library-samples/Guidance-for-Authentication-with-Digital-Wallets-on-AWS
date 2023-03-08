@@ -1,40 +1,40 @@
 import { Auth, API } from 'aws-amplify';
 
 export async function getHttp(path, myInit, useIAMRole = false) {
-    (!myInit && (myInit = {}));
-    (!myInit.headers && (myInit.headers = {}));
+  !myInit && (myInit = {});
+  !myInit.headers && (myInit.headers = {});
 
-    /* 
-       All routes use COGNITO_USER_POOL as authorizer BUT /getNFTsCollectionAlchemy
-       This route uses the AWS_IAM Authorizer in which case the Cognito IdentityPool is used to get temporary AWS Crendetials 
-    */
-    
-    if (!useIAMRole) {
-        // For API routes with COGNITO_USER_POOL authorization 
+  // All routes use the COGNITO_USER_POOL Authorizer which uses the Cognito User Pool token
+  // /getNFTsCollectionAlchemy uses the AWS_IAM Authorizer which uses the IAM Roles and temporary credentials provided by the Cognito IdentityPool
 
-        // We make sure we have an authenticated user with fresh session
-        await Auth.currentAuthenticatedUser();
+  if (!useIAMRole) {
+    // For routes with COGNITO_USER_POOL authorization
 
-        // We Inject an authorization header using our tokens
-        myInit.headers.Authorization = `Bearer ${(await Auth.currentSession())
-            .getIdToken()
-            .getJwtToken()}`;
-    } else {
-        // For API routes with AWS_IAM authorization 
+    // We make sure we have an authenticated user with fresh session
+    await Auth.currentAuthenticatedUser();
 
-        // Anonymous users assume the CognitoUnAuthorizedRole
-        // Authenticated users assume the CognitoAuthorizedRole
-        
-        // Both roles grant access to our open route:
-        //    * /getNFTsCollectionAlchemy
-        
-        // We request temporary AWS credentials based on the IAM Role we assume
-        Auth.currentCredentials()
-            .then(d => console.log('data: ', d))
-            .catch(e => console.log('error: ', e));
+    // We Inject an authorization header using our tokens
+    myInit.headers.Authorization = `Bearer ${(await Auth.currentSession())
+      .getIdToken()
+      .getJwtToken()}`;
+  } else {
+    // For routes with AWS_IAM authorization
 
-        // For details about those IAM Roles, see the SAM Template in `backend/template.yaml`
-    }
+    // Using the Amplify Auth library ad Cognito Identity Pool, our user already assume one of two IAM roles automatically
+    // Anonymous users assume the CognitoUnAuthorizedRole
+    // Authenticated users assume the CognitoAuthorizedRole
 
-    return API.get(process.env.NEXT_PUBLIC_API_NAME, path, myInit);
+    // Both IAM roles grant access to our open route:
+    //    * /getNFTsCollectionAlchemy
+
+    // We request temporary AWS credentials
+    Auth.currentCredentials()
+      .then((d) => console.log("data: ", d))
+      .catch((e) => console.log("error: ", e));
+
+    // For details about those IAM Roles, see the SAM Template in `backend/template.yaml`
+  }
+
+  // We make a HTTP GET request to our API Gateway
+  return API.get(process.env.NEXT_PUBLIC_API_NAME, path, myInit);
 }
