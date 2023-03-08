@@ -707,36 +707,44 @@ Resources:
   ## S3 bucket and CloudFront distribution 
   ##
 
-  CloudFrontOriginAccessIdentity:
-    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
-    Properties:
-      CloudFrontOriginAccessIdentityConfig:
-        Comment: 'NFT Gallery'
+  CloudFrontOriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties: 
+      OriginAccessControlConfig: 
+        Description: Access control to the S3 bucket
+        Name: WebhostS3BucketOriginAccessControl
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
 
   CloudFrontDistribution:
     Type: "AWS::CloudFront::Distribution"
     Properties:
       DistributionConfig:
-        DefaultRootObject: "index.html"
-        Comment: "Cloudfront distribution for NFT Gallery"
-        HttpVersion: http2
-        Enabled: true
         Origins:
-          - Id: s3-webhost
-            DomainName: !GetAtt WebhostS3Bucket.DomainName
+          - DomainName: !GetAtt WebhostS3Bucket.DomainName
+            Id: s3-webhost
+            OriginAccessControlId: !GetAtt CloudFrontOriginAccessControl.Id
             S3OriginConfig:
-              OriginAccessIdentity: 
-                Fn::Sub: 'origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}'
+              OriginAccessIdentity: ""
+        Enabled: true
+        Comment: "Cloudfront distribution for NFT Gallery"
+        DefaultRootObject: "index.html"
+        PriceClass: PriceClass_All
         DefaultCacheBehavior:
           Compress: true
           TargetOriginId: s3-webhost
-          ViewerProtocolPolicy : redirect-to-https
-          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
-          OriginRequestPolicyId: 216adef6-5c7f-47e4-b989-5492eafa07d3
+          ForwardedValues:
+            Cookies:
+              Forward: none
+            QueryString: false
+          ViewerProtocolPolicy: allow-all
           AllowedMethods:
             - GET
             - HEAD
-            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
 
   WebhostS3Bucket:
     Type: AWS::S3::Bucket
@@ -752,7 +760,10 @@ Resources:
             Resource:
               - !Sub "arn:aws:s3:::${WebhostS3Bucket}/*"
             Principal:
-              AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginAccessIdentity}"
+              Service: "cloudfront.amazonaws.com"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CloudFrontDistribution}"
 
 # Stack output
 Outputs:
@@ -771,3 +782,9 @@ Outputs:
   CognitoIdentityPoolId:
     Description: "ID of the Cognito Identity Pool"
     Value: !Ref CognitoIdentityPool
+  CloudFrontDistributionEndpoint:
+    Description: "URL of the Amazon CloudFront distribution you can use to access your webapp after deploying it to the S3 bucket"
+    Value: !GetAtt CloudFrontDistribution.DomainName
+  WebhostS3Bucket:
+    Description: "The S3 bucket used as Origin to your CloudFront distribution. Deploy your webapp there."
+    Value: !Ref WebhostS3Bucket
