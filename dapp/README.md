@@ -1,23 +1,19 @@
 # NFT Gallery dApp Guide
 
-*Important*: Make sure to deploy the backend components of the project before testing the dApp.
+**Important**: Make sure to deploy the backend components of the project before testing the dApp.
 
-This is a ReactJS, Single Page Application (SPA). 
+This is a single page application (SPA) build using ReactJS, NextJS and TailwindCSS.
 
-This is also called a decentralized application (dApp) even though we don't intract with the blockchain directly in this case.
+The app connects to API Gateway to retrieve NFTs from Web3 providers such as Alchemy or Moralis. 
+It resolves IPFS and HTTP URIs to get NFT metadata files and assets and displays details about the NFTs on the screen. 
 
-This app supports the Ethereum blockchain.
+Any users can do a NFT collection lookup even anonymous users. All other operations requires the user to be authenticated.
 
-It connects to your API Gateway to retrieve NFTs from Web3 providers such as Alchemy or Moralis. 
-It resolves IPFS and HTTP URIs to get NFT metadata files and assets and displays details about the NFTs. 
-
-Anonymous users can do a NFT collection lookup. All other operations requires the user to be authenticated.
-
-Authentication is done using a custom authentication challenge orchestrated by a series of Cognito User Pool Lambda triggers.
+Authentication is done using a custom authentication challenge orchestrated by a series of Amazon Cognito User Pool Lambda triggers.
 See: https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-challenge.html
 
 The authentication challenge is the signature of a random message using the user's wallet private key.
-If the signature is valid, Cognito will create a new identity in the Cognito User Pool and will return temporary credentials.
+If the signature is valid, Amazon Cognito will create a new identity in the Cognito User Pool and will return temporary credentials.
 
 # Local deployment 
 
@@ -37,14 +33,16 @@ First we need to build the dApp for production. Run:
 yarn build
 ```
 
-This command will build our dApp for production and will put the files in the `out` folder.
+This command will build our dApp for production and will export production ready files to the `out` folder.
 
-Then run to upload the website code to the S3 Bucket:
+Run to following to upload the website code to the S3 Bucket:
 
 ```
 cd out
 aws s3 sync . s3://${BUCKET_NAME}
 ```
+
+Where `${BUCKET_NAME}` is the name of the S3 bucket created by the SAM template.
 
 The website should now be available at the CloudFront endpoint URL.
 
