@@ -1,3 +1,0 @@
-[submodule "backend/cors-proxy"]
-	path = backend/cors-proxy
-	url = git@github.com:Glifery/cors-proxy.git
