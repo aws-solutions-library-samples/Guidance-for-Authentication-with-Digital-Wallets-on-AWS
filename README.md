@@ -1,18 +1,17 @@
-Inspired by blog: https://davbarrick.medium.com/how-to-build-a-serverless-web3-wallet-login-like-opensea-with-metamask-and-cognito-eb93c723f4de
+Inspired by this blog: https://davbarrick.medium.com/how-to-build-a-serverless-web3-wallet-login-like-opensea-with-metamask-and-cognito-eb93c723f4de
 
 # Intro
 
-This project demonstrate how to use Cognito to perform web3 authentication and gain credentials to access AWS services.
+This project demonstrates how to use Amazon Cognito to perform authentication using a crypto wallet and gain credentials to access AWS services.
 
-The authentication process asks the user to sign a message on the blockchain. The signature is validated by Cognito and an ID Token is provided.
+The authentication process asks the user to sign a message with his private key using his crypto wallet. The signature is validated by Cognito and an ID Token is provided.
 
 The ID Token is then used by API Gateway Authorizer to grant access to restricted API Methods.
 
-The Project also supports unauthenticated anonymous users. Anonymous users get an IAM role that allows them to access public, non restricted API methods.
+The Project also supports unauthenticated users by using Amazon Cognito Identity Pool. 
 
 # Deployment
 
-First do in the `backend` folder and deploy the infrstatructe using the SAM template.
-See the README.
+First go in the `backend` folder, see the README there and deploy the infrastructure using the SAM template. 
 
-Then edit the dapp .env file in order to reference the resources created on the backend.
+Then edit the dapp `.env` file in order to reference the resources created on the backend.
