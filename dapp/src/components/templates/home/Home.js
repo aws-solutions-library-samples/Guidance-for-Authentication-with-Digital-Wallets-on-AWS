@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 import { useState, useEffect, useContext } from 'react';
 import { checkUser } from 'utils/user';
 import { getHttp } from 'utils/api';

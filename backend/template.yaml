@@ -16,6 +16,8 @@ Transform:
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
+
+  # Default settings for Lambda functions
   Function:
     Tracing: Active
     Timeout: 10
@@ -23,6 +25,7 @@ Globals:
     Architectures:
       - x86_64
 
+  # Default settings for API Gateway
   Api:
     Cors:
       AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
@@ -45,6 +48,7 @@ Globals:
             Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
             Access-Control-Allow-Methods: "'OPTIONS,GET,POST'"
 
+# Parameters taken as input to deploy the Cloud Formation stack
 Parameters:
   AlchemyEthUrl:
     Type: String
@@ -705,6 +709,7 @@ Resources:
 
   ##
   ## S3 bucket and CloudFront distribution 
+  ## Can be used to deploy the dApp online
   ##
 
   CloudFrontOriginAccessControl:

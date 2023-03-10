@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 import { Auth } from 'aws-amplify';
 
 export const handleAmplifySignIn = async address => {
@@ -6,9 +9,9 @@ export const handleAmplifySignIn = async address => {
         console.log("SignIn successful. Proceeding to Custom Auth challenge.");
         return cognitoUser;
     } catch (err) {
-        /*Cognito doesn't give us a lot of flexibility on error responses
-        so we'll have to string match our 'User Not Found' error here
-        and create a cognito user with the address as their username if they don't exist*/
+        // Cognito doesn't give us a lot of flexibility on error responses
+        // so we'll have to string match our 'User Not Found' error here
+        // and create a cognito user with the address as their username if they don't exist
         if (err && err.message && err.message.includes('[404]')) {
             const params = {
                 username: address,
@@ -18,7 +21,7 @@ export const handleAmplifySignIn = async address => {
             await Auth.signUp(params);
             console.log("SignUp successful");
 
-            // We call the same function again
+            // We call the same function again now that we're signed up
             return await handleAmplifySignIn(address);
         } else {
             console.log("Signin error");

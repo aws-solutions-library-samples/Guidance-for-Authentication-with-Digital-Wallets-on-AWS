@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 const Footer = () => {
     return (
         <nav className="bg-[#181e27] pb-10 pt-10 h-max">
