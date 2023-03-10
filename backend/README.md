@@ -8,7 +8,7 @@ You must have [SAM CLI](https://docs.aws.amazon.com/serverless-application-model
 
 You must have an [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/) account and respective API keys to deploy this project backend.
 
-# Setup
+# Deployment
 
 Rename `prod.parameters.example` to `prod.parameters` and add the Alchemy and Moralis keys in order to have access to their API.
 
@@ -49,4 +49,3 @@ There are 5 API calls in this example:
 
    * **/getNFTsCollectionAlchemy** is accessible to any users, even anonymous users. All other API calls are protected and only available to authenticated users who have received a valid identity and credentials. 
    * **/corsProxy** is used to get the NFT metadata `.json` files if they are not on IPFS.
-
