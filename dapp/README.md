@@ -1,11 +1,10 @@
-# NFT Gallery dApp Guide
+# NFT Gallery - dApp Guide
 
-**Important**: Make sure to deploy the backend components of the project before testing the dApp.
+**IMPORTANT**: Make sure to deploy the backend components of the project before testing the dApp.
 
-This is a single page application (SPA) build using ReactJS, NextJS and TailwindCSS.
+This folder contains the code for a decentralized application (dApp) which is a standard single page application (SPA) built using ReactJS, NextJS and TailwindCSS.
 
-The app connects to API Gateway to retrieve NFTs from Web3 providers such as Alchemy or Moralis. 
-It resolves IPFS and HTTP URIs to get NFT metadata files and assets and displays details about the NFTs on the screen. 
+It's called a dApp because it connects to the Ethereum blockchain and allows direct interaction with it. In our example we will not interact with Ethereum directly but use Web3 providers APIs such as Alchemy or Moralis. 
 
 Any users can do a NFT collection lookup even anonymous users. All other operations requires the user to be authenticated.
 
@@ -15,27 +14,32 @@ See: https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-
 The authentication challenge is the signature of a random message using the user's wallet private key.
 If the signature is valid, Amazon Cognito will create a new identity in the Cognito User Pool and will return temporary credentials.
 
+We use API Gateway to proxy calls to Alchemy and Moralis and secure our API Keys on the backend.
+
 # Local deployment 
 
 Rename the `.env.example` file to `.env` and update the values there. Some values reference the backend resources created earlier by SAM (see `backend` README) and are available as output of the `sam deploy` command or in the `Output` tab of the Cloud Formation stack.
 
-Then run `yarn` and `yarn dev` to start the local webserver.
+To start the local webserver, run:
+
+```
+yarn
+yarn dev
+``` 
 
 You can access the dApp on http://localhost:3000/
 
 # Deployment to S3
 
-The backend SAM template created a S3 bucket and a CloudFront distribution for us to publish our dApp.
+The SAM template creates a S3 bucket and an Amazon CloudFront distribution for us to publish our dApp online.
 
-First we need to build the dApp for production. Run: 
+Build the dApp for production by running:
 
 ```
 yarn build
 ```
 
-This command will build our dApp for production and will export production ready files to the `out` folder.
-
-Run to following to upload the website code to the S3 Bucket:
+Finally, run to following commands to upload the website code to the S3 Bucket:
 
 ```
 cd out

@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 import { Hub, Logger } from 'aws-amplify';
 
 const logger = new Logger('My-Logger');

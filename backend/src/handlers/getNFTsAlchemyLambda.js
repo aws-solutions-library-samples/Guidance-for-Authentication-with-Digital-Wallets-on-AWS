@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 import { Network, Alchemy } from 'alchemy-sdk';
 
 const headers = {
@@ -13,7 +16,7 @@ const settings = {
 const alchemy = new Alchemy(settings);
 
 export const handler = async (event) => {
-    console.log("Event: ", JSON.stringify(event, null, 2));
+    console.log("EVENT: ", JSON.stringify(event, null, 2));
 
     try {
         var username = event.requestContext.authorizer.claims["cognito:username"];

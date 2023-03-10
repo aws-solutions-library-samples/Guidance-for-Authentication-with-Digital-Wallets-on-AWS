@@ -1,17 +1,27 @@
-Inspired by this blog: https://davbarrick.medium.com/how-to-build-a-serverless-web3-wallet-login-like-opensea-with-metamask-and-cognito-eb93c723f4de
+# NFT Gallery
 
-# Intro
+This project allows users to display their NFTs and any NFT collections on Ethereum.
 
-This project demonstrates how to use Amazon Cognito to perform authentication using a crypto wallet and gain credentials to access AWS services.
+This AWS Blog post explain how this project works in depth: 
 
-The authentication process asks the user to sign a message with his private key using his crypto wallet. The signature is validated by Cognito and an ID Token is provided.
+# Overview
 
-The ID Token is then used by API Gateway Authorizer to grant access to restricted API Methods.
+In this project, we demonstrate how to use various AWS services to authenticate users with their crypto wallet and make secure API calls to [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/) to get NFT metadata without having to interact directly with the Blockchain.
 
-The Project also supports unauthenticated users by using Amazon Cognito Identity Pool. 
+We show how we can use [Amazon Cognito](https://aws.amazon.com/cognito/) to authenticate users using their crypto wallet so they can obtain an identity and temporary credentials to access AWS services.
+
+We will use an Amazon Cognito custom authentication challenge to ask users to sign a random message with their crypto wallet. Amazon Cognito, by the way of [Lambda Triggers](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html), will validate the signature and if valid, issue an ID token which proves that the user's wallet has signed the given message. 
+
+We also demonstrate multiple ways to authorize access to our [API Gateway](https://aws.amazon.com/api-gateway/) routes using this ID Token and [IAM Roles](https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html).
+
+We also showcases the use of Amazon Cognito IdentityPool to support unauthenticated users access and IAM Role authorization.
 
 # Deployment
 
-First go in the `backend` folder, see the README there and deploy the infrastructure using the SAM template. 
+First go to the `backend` folder, see the README there and deploy the architecture using [SAM](https://aws.amazon.com/serverless/sam/).
 
-Then edit the dapp `.env` file in order to reference the resources created on the backend.
+Then go to the `dapp` folder and see the README to run the dApp locally.
+
+# Inspiration
+
+This work was inspired by: https://davbarrick.medium.com/how-to-build-a-serverless-web3-wallet-login-like-opensea-with-metamask-and-cognito-eb93c723f4de

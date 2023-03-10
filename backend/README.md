@@ -1,6 +1,14 @@
-# NFT Gallery Guide
+# NFT Gallery - Backend Guide
 
-See the `template.yaml` file which contains all the resources to be deployed by SAM.
+This folder contains the `template.yaml` file which contains all the resources to be deployed by [SAM](https://aws.amazon.com/serverless/sam/) and several [Amazon Lambda functions](https://aws.amazon.com/lambda/).
+
+# Requirements
+
+You must have [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) installed.
+
+You must have an [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/) account and respective API keys to deploy this project backend.
+
+# Setup
 
 Rename `prod.parameters.example` to `prod.parameters` and add the Alchemy and Moralis keys in order to have access to their API.
 
@@ -10,20 +18,21 @@ To depoy the backend, run the following commands:
 sam build
 sam sam deploy --on-failure DELETE --parameter-overrides $(cat prod.parameters) --stack-name NFTGallery
 ```
-   * `--parameter-overrides $(cat prod.parameters)` is a way to inject the parameters from a file. Sam only supports parameter overrides in the command line.
+
+   * `--parameter-overrides $(cat prod.parameters)` is a way to inject the parameters from a file. SAM only supports parameter overrides in the command line.
    * `--on-failure DELETE` deletes the stack if the deployment fails on CloudFormation. This way you can retry without having to delete the stack by hand yourself.
    * `--stack-name NFTGallery` will be the name of the Cloud Formation stack.
 
 ## What does it deploys? 
 
    * 1 API Gateway
-   * 2 Lambdas to serve as API Gateway integrations
-   * 4 Lambdas acting as Cognito Lambda triggers to manage Amazon Cognito authentication challenges
    * 1 Cognito User Pool to collect our identities
    * 1 Cognito Identity Pool to obtain AWS temporary credentials
+   * 2 AWS IAM Roles to be used by the Amazon Cognito Identity Pool
+   * 2 Lambda functions to serve as API Gateway integrations
+   * 4 Lambda functions acting as Cognito Lambda triggers to manage Amazon Cognito authentication challenges
    * 1 S3 Bucket to store the dApp and act as Origin to the CloudFront distribution
    * 1 CloudFront distribution to serve the dApp and front the S3 Bucket
-   * 2 AWS IAM Roles to be used by the Amazon Cognito Identity Pool
 
 ## What are the API calls?
 
@@ -39,5 +48,5 @@ There are 5 API calls in this example:
 *Notes*:
 
    * **/getNFTsCollectionAlchemy** is accessible to any users, even anonymous users. All other API calls are protected and only available to authenticated users who have received a valid identity and credentials. 
-   * **/corsProxy** is used to get the NFT metadata `.json` files if they are not on IPFS. All Images located on other domains will be displayed thanks to the following nextJS configuration (see next.config.js):
+   * **/corsProxy** is used to get the NFT metadata `.json` files if they are not on IPFS.
 

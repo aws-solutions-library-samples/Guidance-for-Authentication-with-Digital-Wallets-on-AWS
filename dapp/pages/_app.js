@@ -1,16 +1,15 @@
-import { Amplify } from 'aws-amplify';
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
 
+import { Amplify } from 'aws-amplify';
 import { createClient, configureChains, defaultChains, WagmiConfig } from 'wagmi';
 import { publicProvider } from 'wagmi/providers/public';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
-
 import { useEffect, useState } from 'react';
-
 import ContextProvider from "context/UserContext";
-
 import '../styles/globals.css'
 
 const { chains, provider, webSocketProvider } = configureChains(defaultChains, [publicProvider()]);

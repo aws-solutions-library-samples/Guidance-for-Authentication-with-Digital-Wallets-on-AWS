@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 /**
  * Returns a string of form "abc...xyz"
  * @param {string} str string to string

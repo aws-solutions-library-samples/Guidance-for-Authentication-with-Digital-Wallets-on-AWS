@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 import { NFTCard } from '../components/modules/NFTCard';
 import { FetchWrapper } from "use-nft"
 
@@ -15,8 +18,8 @@ export const processMoralisNFTs = async (apiResult) => {
     }
 
     const ethereum = window.ethereum;
-
     const fetcher = ["ethereum", { ethereum }];
+    // The wrapper will be used to fetch our metadata files from http and ipfs hosts
     const fetchWrapper = new FetchWrapper(fetcher, {
       jsonProxy: (url) => {
         // Here we use our CORS proxy to avoid CORS issues
