@@ -1,18 +1,18 @@
 # NFT Gallery - Backend Guide
 
-This folder contains the `template.yaml` file which contains all the resources to be deployed by [SAM](https://aws.amazon.com/serverless/sam/) and several [Amazon Lambda functions](https://aws.amazon.com/lambda/).
+This folder contains the [SAM](https://aws.amazon.com/serverless/sam/) template (`template.yaml`) which describes all the resources to be deployed on AWS. SAM also packages the code for the [Amazon Lambda functions](https://aws.amazon.com/lambda/) we have in the `src` folder.
 
 # Requirements
 
-You must have [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) installed.
+You must have the [SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) installed.
 
-You must have an [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/) account and respective API keys to deploy this project backend.
+You must have an [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/) account and their respective API keys.
 
 # Deployment
 
 Rename `prod.parameters.example` to `prod.parameters` and add the Alchemy and Moralis keys in order to have access to their API.
 
-To depoy the backend, run the following commands:
+Then deploy the backend by running the following commands:
 
 ```
 sam build
@@ -34,9 +34,11 @@ sam sam deploy --on-failure DELETE --parameter-overrides $(cat prod.parameters) 
    * 1 S3 Bucket to store the dApp and act as Origin to the CloudFront distribution
    * 1 CloudFront distribution to serve the dApp and front the S3 Bucket
 
+See the `template.yaml` file for more details about all the resources that are created for this architecture.
+
 ## What are the API calls?
 
-There are 5 API calls in this example:
+5 API Gateway routes get created by the template:
 
    * **/getNFTsCollectionAlchemy**: Get an NFTs Collection from the Alchemy API through API Gateway HTTP proxy (no lambda, low latency, low cost) (`anonymous`)
    * **/getNFTsAlchemy**: Get NFTs from the Alchemy API through API Gateway HTTP proxy (no lambda, low latency, low cost) (`authenticated only`)
@@ -45,7 +47,7 @@ There are 5 API calls in this example:
    * **/getNFTsMoralisLambda**: Get NFTs from Moralis through API Gateway Lambda proxy integrations (more logics, more customization, higher cost, higher latency) (`authenticated only`)
    * **/corsProxy**: Route used to proxy calls to different domains. Useful to retrieve the NFTs' `.json` metadata files from hosts that are not CORS friendly. The dApp calls this route by appending a URL to the `url` query string parameter like this `/corsProxy?url=https://www.google.com`. 10MB max payload (API Gateway limitation) (`public facing`)
 
-*Notes*:
+**Notes**:
 
    * **/getNFTsCollectionAlchemy** is accessible to any users, even anonymous users. All other API calls are protected and only available to authenticated users who have received a valid identity and credentials. 
    * **/corsProxy** is used to get the NFT metadata `.json` files if they are not on IPFS.
