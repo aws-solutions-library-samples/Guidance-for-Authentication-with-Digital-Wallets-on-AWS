@@ -772,9 +772,6 @@ Resources:
 
 # Stack output
 Outputs:
-  ApiGatewayId:
-    Description: "ID of your API Gateway"
-    Value: !Sub "${Api}"
   ApiGatewayEndpoint:
     Description: "API Gateway endpoint URL for 'prod' stage"
     Value: !Sub "https://${Api}.execute-api.${AWS::Region}.amazonaws.com/prod"

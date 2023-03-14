@@ -4,6 +4,8 @@ This project allows users to display their NFTs and any NFT collections on Ether
 
 This AWS Blog post explain how this project works in depth: [PUBLIC URL TODO]
 
+![Preview](images/preview.png)
+
 # Overview
 
 In this project, we demonstrate how to use various AWS services to authenticate users with their crypto wallet and make secure API calls to [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/) to get NFT metadata without having to interact directly with the Blockchain.
@@ -15,6 +17,10 @@ We will use an Amazon Cognito custom authentication challenge to ask users to si
 We also demonstrate multiple ways to authorize access to [API Gateway](https://aws.amazon.com/api-gateway/) routes using this ID Token and [IAM Roles](https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html). API Gateway acts as a proxy to Alchemy and Moralis.
 
 We also showcases the use of Amazon Cognito IdentityPool to support unauthenticated users authorization.
+
+# Architecture 
+
+![Architecture](images/architecture.png)
 
 # Deployment
 
