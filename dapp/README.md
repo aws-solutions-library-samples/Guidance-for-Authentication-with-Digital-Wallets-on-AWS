@@ -4,11 +4,11 @@
 
 This folder contains the code for a decentralized application (dApp) which is a standard single page application (SPA) built using ReactJS, NextJS and TailwindCSS.
 
-It's called a dApp because it connects to the Ethereum blockchain and allows direct interaction with it. In our example we will not interact with Ethereum directly but use Web3 providers APIs such as [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/). 
+It's called a dApp because it connects to the Ethereum blockchain and allows direct interaction with it. In our example we will not interact with Ethereum directly though, instead we will use Web3 providers such as [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/). They provide standard HTTP APIs to interact with the blockchain.
 
-Any users can do a NFT collection lookup even anonymous users. All other operations requires the user to be authenticated.
+Any users of the dApp can lookup any NFT collections, even anonymous users. All other operations requires the user to be authenticated.
 
-Authentication is done using a [custom authentication challenge](https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-challenge.html) orchestrated by a series of Amazon Cognito User Pool Lambda triggers.
+Authentication is done using Amazon Cognito User Pool [custom authentication challenge](https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-challenge.html) orchestrated by a serie [Lambda Triggers](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html).
 
 The challenge consists of asking the users to sign a random message using their crypto wallet private key.
 If the signature is valid, Amazon Cognito will create a new identity in the Cognito User Pool and will return a token.
