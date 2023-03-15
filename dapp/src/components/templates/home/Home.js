@@ -69,7 +69,7 @@ const Home = () => {
   // getNFTs from Moralis using API Gateway Lambda proxy
   const onGetNFTsMoralisLambda = async (action) => {
     try {
-      const provider = { name: "Moralis", src: "/Moralis.png" };
+      const provider = { name: "Moralis", src: "/moralis.png" };
       setLoading(true);
       setProvider(provider);
       setType("Lambda");
