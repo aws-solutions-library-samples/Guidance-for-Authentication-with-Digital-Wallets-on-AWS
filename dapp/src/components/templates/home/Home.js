@@ -36,7 +36,7 @@ const Home = () => {
       setType("Lambda");
       setNftCards([]);
       const result = await getHttp("/getNFTsAlchemyLambda");
-      console.log(result);
+      // console.log(result);
       setNftCards(await processAlchemyOwnedNfts(result));
       setLoading(false);
     } catch (e) {
@@ -55,7 +55,7 @@ const Home = () => {
       setType("Proxy");
       setNftCards([]);
       const result = await getHttp("/getNFTsAlchemy");
-      console.log(result);
+      // console.log(result);
       setNftCards(await processAlchemyOwnedNfts(result));
       setLoading(false);
     } catch (e) {
@@ -75,7 +75,7 @@ const Home = () => {
       setType("Lambda");
       setNftCards([]);
       const result = await getHttp("/getNFTsMoralisLambda");
-      console.log(result);
+      // console.log(result);
       setNftCards(await processMoralisNFTs(result));
       setLoading(false);
     } catch (e) {
@@ -99,7 +99,7 @@ const Home = () => {
         },
       };
       const result = await getHttp("/getNFTsMoralis", myInit);
-      console.log(result);
+      // console.log(result);
       setNftCards(await processMoralisNFTs(result));
       setLoading(false);
     } catch (e) {
@@ -145,7 +145,7 @@ const Home = () => {
         <p className="text-lg font-bold">NFT collection lookup</p>
         <p className="text-sm">
           Input the NFT contract address to get the NFTs in that collection. Any
-          users can make those API calls even unauthenticated users. We use{" "}
+          users can make this API call, even unauthenticated users. We use
           <strong>Alchemy</strong> as a provider.
         </p>
         <div className="flex flex-row gap-2 content-start mt-5">

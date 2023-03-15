@@ -33,10 +33,8 @@ export const processMoralisNFTs = async (apiResult) => {
     let nfts = [];
 
     // Iterate through the list of nfts coming from Moralis and
-    // fetch the JSON metadata file for each NFT in parralel using Promises
+    // fetch the JSON metadata file for each NFT in parallel using Promises
     await Promise.all(apiResult.result.map(async nft => {
-      console.log(nft);
-
       // We only get basic token metadata from Moralis
       let myNftObj = {
         id: nft.token_id,
@@ -46,19 +44,29 @@ export const processMoralisNFTs = async (apiResult) => {
       }
 
       try {
-        // We fetch the .json file associated with the token to get the rest of the metadata
-        const result = await fetchWrapper.fetchNft(
-          nft.token_address,
-          nft.token_id
-        )
+        // console.log("Go fetch");
+
+        var result = null;
+        // We loop because sometimes the blockchain doesn't return the Token info and thorws and error
+        while (!result || result.name == "") {
+          // We fetch the .json file associated with the token to get the rest of the metadata
+          result = await fetchWrapper.fetchNft(
+            nft.token_address,
+            nft.token_id
+          )
+        }
 
         if (!result) 
           throw ("Error getting NFT Metadata: " + result);
       
+        // console.log("Result: ", result);
+
         // Enrishing our object with what we extracted from the .json file
         myNftObj.description = result.description;
         myNftObj.title = result.name;
         myNftObj.thumbnail = result.image;
+
+        // console.log("My Obj: ", myNftObj);
       }
       catch (e) {
         console.log(e);
