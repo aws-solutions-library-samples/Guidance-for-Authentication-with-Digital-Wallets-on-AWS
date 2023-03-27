@@ -10,14 +10,14 @@ Any users of the dApp can lookup any NFT collections, even anonymous users. All 
 
 Authentication is done using Amazon Cognito User Pool [custom authentication challenge](https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-challenge.html) orchestrated by a serie [Lambda Triggers](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html).
 
-The challenge consists of asking the users to sign a random message using their crypto wallet private key.
+The custom challenge consists of asking users to sign a random message using their crypto wallet private key.
 If the signature is valid, Amazon Cognito will create a new identity in the Cognito User Pool and will return a token.
 
-We use API Gateway to proxy API calls to Alchemy and Moralis. API Gateway provides authorization and protection of our Alchemy and Moralis API Keys. Those secret keys are never exposed on the frontend application.
+We use API Gateway to proxy API calls to Alchemy and Moralis. API Gateway provides authorization and protects our Alchemy and Moralis API Keys. Those secret keys are never exposed on the frontend application.
 
 # Local deployment 
 
-Rename the `.env.example` file to `.env` and update the values there. Some values are referencing backend resources created earlier by SAM (see `backend` README) and are visibile as output of the `sam deploy` command or in the `Output` tab of the Cloud Formation stack.
+Rename the `.env.example` file to `.env` and update the values there. Some values are referencing backend resources created earlier by SAM (see the `backend` README) and are visibile as output of the `sam deploy` command or in the `Output` tab of the Cloud Formation stack.
 
 To start the local webserver, run:
 
