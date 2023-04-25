@@ -16,11 +16,12 @@ Then deploy the backend by running the following commands:
 
 ```
 sam build
-sam sam deploy --on-failure DELETE --parameter-overrides $(cat prod.parameters) --stack-name NFTGallery
+sam sam deploy --on-failure DELETE --parameter-overrides $(cat prod.parameters) --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM --stack-name NFTGallery
 ```
 
    * `--parameter-overrides $(cat prod.parameters)` is a way to inject the parameters from a file. SAM only supports parameter overrides in the command line.
    * `--on-failure DELETE` deletes the stack if the deployment fails on CloudFormation. This way you can retry without having to delete the stack by hand yourself.
+   * `--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM` allows CloudFront to create IAM resources for you.
    * `--stack-name NFTGallery` will be the name of the Cloud Formation stack.
 
 ## What does it deploys? 
