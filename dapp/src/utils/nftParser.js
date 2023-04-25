@@ -26,7 +26,7 @@ export const processMoralisNFTs = async (apiResult) => {
         return process.env.NEXT_PUBLIC_CORS_PROXY + url;
       },
       ipfsUrl: (cid, path = "") => {
-        return `https://ipfs.io/ipfs/${cid}${path}`
+        return `https://cloudflare-ipfs.com/ipfs/${cid}${path}`
       }
     })
 
