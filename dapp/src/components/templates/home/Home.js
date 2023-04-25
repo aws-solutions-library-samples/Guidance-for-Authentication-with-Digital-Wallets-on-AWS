@@ -145,8 +145,7 @@ const Home = () => {
         <p className="text-lg font-bold">NFT collection lookup</p>
         <p className="text-sm">
           Input the NFT contract address to get the NFTs in that collection. Any
-          users can make this API call, even unauthenticated users. We use
-          <strong>Alchemy</strong> as a provider.
+          users can make this API call, even unauthenticated users. We use <strong>Alchemy</strong> as provider.
         </p>
         <div className="flex flex-row gap-2 content-start mt-5">
           <div className="flex-1">
