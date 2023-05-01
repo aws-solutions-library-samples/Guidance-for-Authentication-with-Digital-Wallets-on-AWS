@@ -49,10 +49,10 @@ export const handler = async (event) => {
       const body = await res.text();
       proxyResponse.body = body;
       resolve(proxyResponse);
-    } catch (err) {
-      console.error(`Caught error: `, err);
+    } catch (error) {
+      console.error(`Caught error: `, error);
 
-      reject(err);
+      reject(error);
       return;
     }
   });

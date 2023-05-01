@@ -3,12 +3,15 @@
 
 import { Auth, API } from 'aws-amplify';
 
+/**
+ * Makes a request to our API Gateway instance using AWS Amplify
+ */
 export async function getHttp(path, myInit, useIAMRole = false) {
   !myInit && (myInit = {});
   !myInit.headers && (myInit.headers = {});
 
-  // All routes use the COGNITO_USER_POOL Authorizer which uses the Cognito User Pool token
-  // /getNFTsCollectionAlchemy uses the AWS_IAM Authorizer which uses the IAM Roles and temporary credentials provided by the Cognito IdentityPool
+  // /getNFTsCollectionAlchemy uses the API Gateway AWS_IAM Authorizer which uses the IAM Roles and temporary credentials provided by the Cognito IdentityPool
+  // All other routes use the API Gateway COGNITO_USER_POOL Authorizer which uses the Cognito User Pool token
 
   if (!useIAMRole) {
     // For routes with COGNITO_USER_POOL authorization
@@ -23,7 +26,7 @@ export async function getHttp(path, myInit, useIAMRole = false) {
   } else {
     // For routes with AWS_IAM authorization
 
-    // Using the Amplify Auth library ad Cognito Identity Pool, our user already assume one of two IAM roles automatically
+    // Using the Amplify Auth library and Cognito Identity Pool, our user already assume one of two IAM roles automatically
     // Anonymous users assume the CognitoUnAuthorizedRole
     // Authenticated users assume the CognitoAuthorizedRole
 
@@ -31,9 +34,8 @@ export async function getHttp(path, myInit, useIAMRole = false) {
     //    * /getNFTsCollectionAlchemy
 
     // We request temporary AWS credentials
-    Auth.currentCredentials()
-      .then((d) => console.log("data: ", d))
-      .catch((e) => console.log("error: ", e));
+  
+    await Auth.currentCredentials();
 
     // For details about those IAM Roles, see the SAM Template in `backend/template.yaml`
   }

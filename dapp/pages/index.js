@@ -9,5 +9,5 @@ export default function HomePage() {
     <Default pageName="Home">
       <Home />
     </Default>
-  )
+  );
 }

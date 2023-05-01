@@ -12,24 +12,20 @@ const headers = {
 export const handler = async (event) => {
     console.log('Event: ', JSON.stringify(event, null, 2));
 
-    try {
-        const { request = {} } = event;
-        const { userNotFound } = request;
+    const { request = {} } = event;
+    const { userNotFound } = request;
 
-        if (userNotFound) {
-            throw new Error('[404] User Not Found');
-        }
-
-        const nonce = Math.floor(Math.random() * 1000000).toString();
-        const message = `Welcome message, nonce: ${nonce}`;
-
-        event.response.publicChallengeParameters = { message };
-        event.response.privateChallengeParameters = { message };
-
-        console.log('Return:');
-        console.log(event);
-        return event;
-    } catch (err) {
-        throw err;
+    if (userNotFound) {
+        throw new Error('[404] User Not Found');
     }
+
+    const nonce = Math.floor(Math.random() * 1000000).toString();
+    const message = `Welcome message, nonce: ${nonce}`;
+
+    event.response.publicChallengeParameters = { message };
+    event.response.privateChallengeParameters = { message };
+
+    console.log('Return:');
+    console.log(event);
+    return event;
 };
