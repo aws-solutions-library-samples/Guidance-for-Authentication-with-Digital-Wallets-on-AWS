@@ -2,145 +2,88 @@
 // SPDX-License-Identifier: MIT-0
 
 import { NFTCard } from '../components/modules/NFTCard';
-import { FetchWrapper } from "use-nft"
+import { FetchWrapper } from 'use-nft';
+import { promiseAllSettled } from './promises';
 
-const sortNFTCards = (nfts) => {
+const getNftCards = (nfts) => {
   return [].concat(nfts)
-    .sort((a, b) => a.title > b.title ? 1 : -1)
-    .map((nft, i) => 
+    .sort((a, b) => a.title.localeCompare(b.title))
+    .map((nft) => 
       <NFTCard key={nft.name + nft.id} nft={nft} />
     );
-}
+};
 
-export const processMoralisNFTs = async (apiResult) => {
-    if (!apiResult?.result?.length) {
-      return;
+export const processMoralisNfts = async (apiResult) => {
+  if (!apiResult?.result?.length) {
+    return [];
+  }
+
+  const ethereum = window.ethereum;
+  const fetcher = ['ethereum', { ethereum }];
+  // The wrapper will be used to fetch our metadata files from http and ipfs hosts
+  const fetchWrapper = new FetchWrapper(fetcher, {
+    jsonProxy: (url) => {
+      // Here we use our CORS proxy to avoid CORS issues
+      return process.env.NEXT_PUBLIC_CORS_PROXY + url;
+    },
+    ipfsUrl: (cid, path = '') => {
+      return `https://cloudflare-ipfs.com/ipfs/${cid}${path}`;
     }
+  });
 
-    const ethereum = window.ethereum;
-    const fetcher = ["ethereum", { ethereum }];
-    // The wrapper will be used to fetch our metadata files from http and ipfs hosts
-    const fetchWrapper = new FetchWrapper(fetcher, {
-      jsonProxy: (url) => {
-        // Here we use our CORS proxy to avoid CORS issues
-        return process.env.NEXT_PUBLIC_CORS_PROXY + url;
-      },
-      ipfsUrl: (cid, path = "") => {
-        return `https://cloudflare-ipfs.com/ipfs/${cid}${path}`
-      }
-    })
+  const nfts = [];
 
-    let nfts = [];
+  // Iterate through the list of nfts coming from Moralis and
+  // fetch the JSON metadata file for each NFT in parallel using Promises
+  const { failures } = await promiseAllSettled(apiResult.result.map(async nft => {
+    // We only get basic token metadata from Moralis
+    const myNftObj = {
+      id: nft.token_id,
+      contractType: nft.contract_type,
+      symbol: nft.symbol,
+      amount: nft.amount
+    };
 
-    // Iterate through the list of nfts coming from Moralis and
-    // fetch the JSON metadata file for each NFT in parallel using Promises
-    await Promise.all(apiResult.result.map(async nft => {
-      // We only get basic token metadata from Moralis
-      let myNftObj = {
-        id: nft.token_id,
-        contract_type: nft.contract_type,
-        symbol: nft.symbol,
-        amount: nft.amount
-      }
+    const result = await fetchWrapper.fetchNft(
+      nft.token_address,
+      nft.token_id
+    );
 
-      try {
-        // console.log("Go fetch");
+    // Enriching our object with what we extracted from the .json file
+    myNftObj.description = result.description;
+    myNftObj.title = result.name;
+    myNftObj.thumbnail = result.image;
 
-        var result = null;
-        // We loop because sometimes the blockchain doesn't return the Token info and thorws and error
-        while (!result || result.name == "") {
-          // We fetch the .json file associated with the token to get the rest of the metadata
-          result = await fetchWrapper.fetchNft(
-            nft.token_address,
-            nft.token_id
-          )
-        }
+    nfts.push(myNftObj);
+  }));
 
-        if (!result) 
-          throw ("Error getting NFT Metadata: " + result);
-      
-        // console.log("Result: ", result);
+  
+  if (failures.length) {
+    console.error('Failed to fetch some Moralis NFT metadata', failures);
+  }
 
-        // Enrishing our object with what we extracted from the .json file
-        myNftObj.description = result.description;
-        myNftObj.title = result.name;
-        myNftObj.thumbnail = result.image;
+  return getNftCards(nfts);
+};
 
-        // console.log("My Obj: ", myNftObj);
-      }
-      catch (e) {
-        console.log(e);
-      }
+export const processAlchemyNfts = (apiResult) => {
+  const alchemyNfts = apiResult?.ownedNfts || apiResult?.nfts;
 
-      nfts.push(myNftObj);
-
-    }));
-
-    const nftCards = sortNFTCards(nfts);
-
-    return(nftCards);
-}
-
-export const processAlchemyOwnedNfts = async (apiResult) => {
-    if (!apiResult?.ownedNfts?.length) {
-      return;
-    }
-
-    // Reset list Items
-    let nfts = [];
-
-    // Iterate through the list of nfts
-    for (let i = 0; i < apiResult.ownedNfts.length; i++) {
-      console.log(apiResult.ownedNfts[i]);
-
-      // Alchemy provides NFT Metadata from JSON out of the box
-      // They also provide IPFS Gateway resolution and thumbnail feature
-      let myNftObj = {
-        id: apiResult.ownedNfts[i]?.id?.tokenId,
-        title: apiResult.ownedNfts[i]?.title,
-        description: apiResult.ownedNfts[i]?.description,
-        thumbnail: apiResult.ownedNfts[i]?.media[0]?.thumbnail,
-        image: apiResult.ownedNfts[i]?.media[0]?.gateway,
-        contract_type: (apiResult.ownedNfts[i]?.contractMetadata? apiResult.ownedNfts[i]?.contractMetadata.tokenType : apiResult.ownedNfts[i]?.contract.tokenType),
-        symbol: (apiResult.ownedNfts[i]?.contractMetadata? apiResult.ownedNfts[i]?.contractMetadata.symbol : apiResult.ownedNfts[i]?.contract.symbol),
-        amount: apiResult.ownedNfts[i]?.balance
-      }
-      nfts.push(myNftObj);
-    }
-
-    const nftCards = sortNFTCards(nfts);
-
-    return(nftCards);
-}
-
-export const processAlchemyNFTsForCollection = async (apiResult) => {
-  if (!apiResult?.nfts?.length) {
+  if (!alchemyNfts) {
     return;
   }
 
-  // Reset list Items
-  let nfts = [];
+  const nfts = alchemyNfts.map(alchemyNft => {
+    return {
+      id: alchemyNft.id?.tokenId,
+      title: alchemyNft.title,
+      description: alchemyNft.description,
+      thumbnail: alchemyNft.media[0]?.thumbnail,
+      image: alchemyNft.media[0]?.gateway,
+      contractType: (alchemyNft.contractMetadata ? alchemyNft.contractMetadata.tokenType : alchemyNft.contract.tokenType),
+      symbol: (alchemyNft.contractMetadata ? alchemyNft.contractMetadata.symbol : alchemyNft.contract.symbol),
+      amount: alchemyNft.balance
+    };
+  });
 
-  // Iterate through the list of nfts
-  for (let i = 0; i < apiResult.nfts.length; i++) {
-    console.log(apiResult.nfts[i]);
-
-    // Alchemy provides NFT Metadata from JSON out of the box
-    // They also provide IPFS Gateway resolution and thumbnail feature
-    let myNftObj = {
-      id: apiResult.nfts[i]?.id?.tokenId,
-      title: apiResult.nfts[i]?.title,
-      description: apiResult.nfts[i]?.description,
-      thumbnail: (apiResult.nfts[i]?.media[0]?.thumbnail? apiResult.nfts[i]?.media[0]?.thumbnail : apiResult.nfts[i]?.media[0]?.gateway),
-      image: apiResult.nfts[i]?.media[0]?.gateway,
-      contract_type: (apiResult.nfts[i]?.contractMetadata? apiResult.nfts[i]?.contractMetadata.tokenType : apiResult.nfts[i]?.contract.tokenType),
-      symbol: (apiResult.nfts[i]?.contractMetadata? apiResult.nfts[i]?.contractMetadata.symbol : apiResult.nfts[i]?.contract.symbol),
-      amount: apiResult.nfts[i]?.balance
-    }
-    nfts.push(myNftObj);
-  }
-
-  const nftCards = sortNFTCards(nfts);
-
-  return(nftCards);
-}
+  return getNftCards(nfts);
+};

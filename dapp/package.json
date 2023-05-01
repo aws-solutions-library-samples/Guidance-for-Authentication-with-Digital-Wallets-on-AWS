@@ -6,18 +6,24 @@
     "dev": "next dev",
     "build": "next build && next export",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix"
   },
   "dependencies": {
     "@web3uikit/icons": "^0.4.1",
     "autoprefixer": "^10.4.14",
-    "aws-amplify": "^4.3.39",
+    "aws-amplify": "^5.1.3",
     "ethers": "^5.7.2",
     "next": "12.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "tailwindcss": "^3.2.4",
     "use-nft": "^0.12.0",
-    "wagmi": "^0.6.8",
-    "tailwindcss": "^3.2.4"
+    "wagmi": "^0.6.8"
+  },
+  "devDependencies": {
+    "eslint": "8.39.0",
+    "eslint-config-next": "13.3.1",
+    "eslint-plugin-unused-imports": "^2.0.0"
   }
 }

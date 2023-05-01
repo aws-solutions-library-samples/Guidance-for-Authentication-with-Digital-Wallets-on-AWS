@@ -2,254 +2,132 @@
 // SPDX-License-Identifier: MIT-0
 
 import { useState, useEffect, useContext } from 'react';
-import { checkUser } from 'utils/user';
 import { getHttp } from 'utils/api';
-import Image from 'next/Image';
 import { GlobalContext } from 'context/UserContext';
-import { NFTList } from 'components/modules/NFTList';
-import { processMoralisNFTs, processAlchemyOwnedNfts, processAlchemyNFTsForCollection } from 'utils/nftParser';
+import * as nftParserFunctions from 'utils/nftParser';
+import { respondToError } from 'utils/responses';
+import { NFTLookup } from 'components/modules/NFTLookup';
+import { NFTUserOwned } from 'components/modules/NFTUserOwned';
+import { NFTResults } from 'components/modules/NFTResults';
+
+function getProvider(providerName) {
+  return { name: providerName, src: `/${providerName.toLowerCase()}.png`};
+}
 
 const Home = () => {
-  const [user, setUser] = useContext(GlobalContext);
+  const [user] = useContext(GlobalContext);
   const [nftCards, setNftCards] = useState(null);
-  const [provider, setProvider] = useState(null);
-  const [type, setType] = useState(null);
+  const [provider, setProvider] = useState(getProvider('Alchemy'));
+  const [type, setType] = useState('Proxy');
   const [loading, setLoading] = useState(false);
-  const [contract, setContract] = useState("");
+  const [contract, setContract] = useState(null);
 
   useEffect(() => {
-    checkUser(setUser);
-  }, [setUser]);
-
-  useEffect(() => {
-    console.log("User Has changed", user);
+    console.log('User Has changed', user);
     if (!user)
       setNftCards(null);
   }, [user]);
 
-  // getNFTs from Alchemy using API Gateway Lambda proxy
-  const onGetNFTsAlchemyLambda = async () => {
-    try {
-      const provider = { name: "Alchemy", src: "/alchemy.png" };
-      setLoading(true);
-      setProvider(provider);
-      setType("Lambda");
-      setNftCards([]);
-      const result = await getHttp("/getNFTsAlchemyLambda");
-      // console.log(result);
-      setNftCards(await processAlchemyOwnedNfts(result));
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      const error = e?.message ? e?.message : e;
-      console.error(error);
-      alert("Something went wrong...\n" + error);
+  // Helper function to make HTTP requests for NFTs and process the results
+
+  const fetchNfts = async ({providerName, requestOrigin, isCollection = false, amplifyRequestInit, useIAMRole = false}) => {
+    // Update state
+
+    const provider = getProvider(providerName);
+
+    setLoading(true);
+    setProvider(provider);
+    setType(requestOrigin);
+    setNftCards([]);
+
+    // Build the HTTP request path
+
+    let fetchPath = '/getNFTs';
+
+    if (isCollection) {
+      fetchPath += `Collection${providerName}`;
+    } else {
+      fetchPath += providerName;
+
+      if (requestOrigin == 'Lambda') {
+        fetchPath += requestOrigin;
+      }
     }
+
+    // Build the parser function name
+
+    const parserFunctionName = `process${providerName}Nfts`;
+    
+    // Make request and process the results
+
+    try {
+      const result = await getHttp(fetchPath, amplifyRequestInit, useIAMRole);
+      const processedResults = await nftParserFunctions[parserFunctionName](result);
+
+      setNftCards(processedResults);
+    } catch (error) {
+      respondToError('Could not fetch NFTs', error);
+    }
+
+    setLoading(false);
   };
 
-  // getNFTs from Alchemy using API Gateway HTTP proxy
-  const onGetNFTsAlchemy = async () => {
-    try {
-      setLoading(true);
-      setProvider({ name: "Alchemy", src: "/alchemy.png" });
-      setType("Proxy");
-      setNftCards([]);
-      const result = await getHttp("/getNFTsAlchemy");
-      // console.log(result);
-      setNftCards(await processAlchemyOwnedNfts(result));
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      const error = e?.message ? e?.message : e;
-      console.error(error);
-      alert("Something went wrong...\n" + error);
-    }
-  };
-
-  // getNFTs from Moralis using API Gateway Lambda proxy
-  const onGetNFTsMoralisLambda = async (action) => {
-    try {
-      const provider = { name: "Moralis", src: "/moralis.png" };
-      setLoading(true);
-      setProvider(provider);
-      setType("Lambda");
-      setNftCards([]);
-      const result = await getHttp("/getNFTsMoralisLambda");
-      // console.log(result);
-      setNftCards(await processMoralisNFTs(result));
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      const error = e?.message ? e?.message : e;
-      console.error(error);
-      alert("Something went wrong...\n" + error);
-    }
-  };
-
-  // getNFTs to Moralis using API Gateway HTTP proxy
-  const onGetNFTsMoralis = async () => {
-    try {
-      setLoading(true);
-      setProvider({ name: "Moralis", src: "/moralis.png" });
-      setType("Proxy");
-      setNftCards([]);
-      const myInit = {
-        queryStringParameters: {
-          chain: "eth",
-        },
-      };
-      const result = await getHttp("/getNFTsMoralis", myInit);
-      // console.log(result);
-      setNftCards(await processMoralisNFTs(result));
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      const error = e?.message ? e?.message : e;
-      console.error(error);
-      alert("Something went wrong...\n" + error);
-    }
-  };
+  /* Unathenticated request for NFT Collection */
 
   // API call getNFTsCollection from Alchemy using API Gateway HTTP proxy
   // Takes in a contract address and returns all the NFTs in that collection
-  const onGetNFTsCollectionAlchemy = async () => {
-    try {
-      if (!contract) 
-        throw "Please provide a contract address";
+  const onGetNFTsCollectionAlchemy = (event) => {
+    event.preventDefault();
 
-      setLoading(true);
-      setProvider({ name: "Alchemy", src: "/alchemy.png" });
-      setType("Proxy");
-      const myInit = {
-        queryStringParameters: {
-          contractAddress: contract,
-        },
-      };
-      setNftCards([]);
-      // This API call can be made by anonymous users
-      // The third parameter make sure we use the IAM Role to connect to the API
-      const result = await getHttp("/getNFTsCollectionAlchemy", myInit, true);
-      setNftCards(await processAlchemyNFTsForCollection(result));
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      const error = e?.message ? e?.message : e;
-      console.error(error);
-      alert("Something went wrong...\n" + error);
-    }
+    fetchNfts({providerName: 'Alchemy', requestOrigin: 'Proxy', isCollection: true, useIAMRole: true, amplifyRequestInit: {
+      queryStringParameters: {
+        contractAddress: contract,
+      }
+    }});
+  };
+
+  /* Authenticated requests for user's owned NFTs */
+
+  // getNFTs from Alchemy using API Gateway Lambda proxy
+  const onGetNFTsAlchemyLambda = () => {
+    fetchNfts({providerName: 'Alchemy', requestOrigin: 'Lambda'});
+  };
+
+  // getNFTs from Alchemy using API Gateway HTTP proxy
+  const onGetNFTsAlchemy = () => {
+    fetchNfts({providerName: 'Alchemy', requestOrigin: 'Proxy'});
+  };
+
+  // getNFTs from Moralis using API Gateway Lambda proxy
+  const onGetNFTsMoralisLambda = () => {
+    fetchNfts({providerName: 'Moralis', requestOrigin: 'Lambda'});
+  };
+
+  // getNFTs to Moralis using API Gateway HTTP proxy
+  const onGetNFTsMoralis = () => {
+    fetchNfts({providerName: 'Moralis', requestOrigin: 'Proxy', amplifyRequestInit: {
+      queryStringParameters: {
+        chain: 'eth',
+      },
+    }});
   };
 
   return (
-    <div className="container mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 text-white">
-      <div>
-        <p className="text-lg font-bold">NFT collection lookup</p>
-        <p className="text-sm">
-          Input the NFT contract address to get the NFTs in that collection. Any
-          users can make this API call, even unauthenticated users. We use <strong>Alchemy</strong> as provider.
-        </p>
-        <div className="flex flex-row gap-2 content-start mt-5">
-          <div className="flex-1">
-            <input
-              className="text-[#3c4d6f] w-full p-2 rounded"
-              onChange={(event) => setContract(event.target.value)}
-              placeholder="NFT contract address"
-            />
-          </div>
-          <div className="flex-none">
-            <button
-              className="text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded"
-              disabled={loading}
-              onClick={onGetNFTsCollectionAlchemy}
-            >
-              From HTTP Proxy
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className={user ? "mt-10" : "hidden"}>
-        <p className="text-lg font-bold">Get my NFTs</p>
-        <p className="text-sm">
-          These API calls will return a list of NFTs owned by the current
-          connected wallet.
-        </p>
-
-        <div className="flex flex-row mt-5">
-          <div className="bg-[#181e27] p-2 flex-none rounded">
-            <div className="flex flex-row">
-              <div className="flex-none relative w-[22px] h-[20px] mr-1">
-                <Image alt="Alchemy logo" layout="fill" src="/alchemy.png"></Image>
-              </div>
-              <p className=" flex-none text-base font-bold">Alchemy</p>
-            </div>
-            <div className="flex-auto mt-2 items-start flex-col gap-2">
-              <div>
-                <button
-                  className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded"
-                  disabled={loading}
-                  onClick={onGetNFTsAlchemy}
-                >
-                  From HTTP Proxy
-                </button>
-              </div>
-              <div className="mt-2">
-                <button
-                  className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded"
-                  disabled={loading}
-                  onClick={onGetNFTsAlchemyLambda}
-                >
-                  From Lambda Proxy
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-[#181e27] p-2 ml-2 flex-none rounded">
-            <div className="flex flex-row">
-              <div className="flex-none relative w-[22px] h-[20px] mr-1">
-                <Image alt="Moralis logo" layout="fill" src="/moralis.png"></Image>
-              </div>
-              <p className="text-base font-bold">Moralis</p>
-            </div>
-            <div className="flex-auto mt-2 items-start flex-col gap-2">
-              <div>
-                <button
-                  className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded"
-                  disabled={loading}
-                  onClick={onGetNFTsMoralis}
-                >
-                  From HTTP Proxy
-                </button>
-              </div>
-              <div className="mt-2">
-                <button
-                  className="w-full text-left bg-blue-500 hover:bg-blue-700 disabled:bg-blue-900 font-bold py-2 px-4 rounded"
-                  disabled={loading}
-                  onClick={onGetNFTsMoralisLambda}
-                >
-                  From Lambda Proxy
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {nftCards && (
-        <div className={nftCards ? "mt-10 bg-[#181e27] rounded" : "hidden"}>
-          <div className="p-4 flex flex-row ">
-            <div className="flex-none relative w-[22px] h-[20px] mr-1">
-              <Image alt="Current Web3 provider logo" layout="fill" src={provider?.src}></Image>
-            </div>
-            <p className="text-base font-bold">
-              Output from {provider?.name} {type}
-            </p>
-          </div>
-          <div className="p-4 ">
-            <NFTList nftCards={nftCards} />
-          </div>
-        </div>
-      )}
+    <div className="container mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 text-white flex flex-col gap-7">
+      <NFTLookup loading={loading} onLookup={onGetNFTsCollectionAlchemy} onContractAddressChange={(event) => setContract(event.target.value)} />
+      {user ? <NFTUserOwned loading={loading} providers={[
+        {
+          name: 'Alchemy',
+          getProxy: onGetNFTsAlchemy,
+          getLambda: onGetNFTsAlchemyLambda
+        },
+        {
+          name: 'Moralis',
+          getProxy: onGetNFTsMoralis,
+          getLambda: onGetNFTsMoralisLambda
+        }
+      ]} />: null}
+      {nftCards ? <NFTResults loading={loading} provider={provider} type={type} nftCards={nftCards} /> : null}
     </div>
   );
 };

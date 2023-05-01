@@ -1,0 +1,45 @@
+{
+  "extends": ["eslint:recommended", "next/core-web-vitals"],
+  "env": {
+    "es6": true
+  },
+  "plugins": ["unused-imports"],
+  "rules": {
+    "semi": "error",
+    "indent": ["error", 2],
+    "camelcase": "error",
+    "spaced-comment": "error",
+    "quotes": ["error", "single"],
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-duplicate-imports": "error",
+    "unused-imports/no-unused-imports": "error",
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "react/self-closing-comp": [
+      "error",
+      {
+        "component": true,
+        "html": true
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.js"],
+      // This is the default parser of ESLint
+      "parser": "espree",
+      "parserOptions": {
+        "ecmaVersion": "latest"
+      }
+    }
+  ]
+}
