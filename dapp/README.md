@@ -1,12 +1,14 @@
 # NFT Gallery - dApp Guide
 
-This folder contains the code for a decentralized application (dApp) which is a standard single page application (SPA) built using ReactJS, NextJS and TailwindCSS.
+This folder contains the code of the decentralized web application (dApp) which is a standard single page application (SPA) built using ReactJS, NextJS and TailwindCSS.
+It's called a dApp because it can interact with the blockchains directly using the users' digital wallets. 
 
-It's called a dApp because it connects to the Ethereum blockchain and allows direct interaction with it. In our example we use the Ethereum API to get the user's public Ethereum blockchain address. We will not interact with the Ethereum blockchain directly though, instead we will use Web3 providers such as [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/). They provide standard HTTP APIs to interact with the blockchain.
+In our example though, we will not interact with the Ethereum blockchain directly. Instead we will use Web3 providers such as [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/). 
+They provide standard HTTP APIs to eaily interact with the blockchain without developer knowledge or blockchain access.
 
 # Prerequisites
 
-1. **IMPORTANT**: Make sure to deploy the backend components of the project before testing the dApp.
+1. **IMPORTANT**: Make sure to deploy the backend components (see `backend` folder) of the project before testing the dApp.
 2. [Node.js](https://nodejs.org/)
 3. Node.js package manager. Examples include:
    - [yarn](https://yarnpkg.com/getting-started/install)

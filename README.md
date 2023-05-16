@@ -1,14 +1,15 @@
 # NFT Gallery
 
-This web application permits users to display their NFTs and any NFT collections on Ethereum.
+This decentralized web application (dApp) permits users to display their own NFTs or any NFT collections on Ethereum. 
+Any users can look up any NFT collections while Authenticated users can also look up their own NFTs.
 
-This AWS Blog post explain how this project works in depth: [PUBLIC URL TODO]
+Read this related AWS Blog post for more information: https://aws.amazon.com/blogs/architecture/dapp-authentication-with-amazon-cognito-and-web3-proxy-with-amazon-api-gateway/
 
 ![Preview](images/preview.png)
 
 # Overview
 
-This project demonstrates how to use various AWS services to authenticate users with their digital wallet and make secure API calls to third party Web3 API providers like [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/). All users can look up any NFT collections on Ethereum while authenticated users can look up their own NFTs.
+This demo demonstrates how you can use various AWS services to authenticate users with their digital wallet and make secure API calls to third party Web3 API providers like [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/). 
 
 You will learn how you can use [Amazon Cognito](https://aws.amazon.com/cognito/) to authenticate users using their digital wallet to obtain an identity and temporary AWS credentials to grant your front web application  access to the AWS services you need.
 
