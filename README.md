@@ -9,11 +9,11 @@ Read this related AWS Blog post for more information: https://aws.amazon.com/blo
 
 # Overview
 
-This demo demonstrates how you can use various AWS services to authenticate users with their digital wallet and make secure API calls to third party Web3 API providers like [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/). 
+This project demonstrates how you can use various AWS services to authenticate users with their digital wallet and make secure API calls to third party Web3 API providers like [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/). 
 
-You will learn how you can use [Amazon Cognito](https://aws.amazon.com/cognito/) to authenticate users using their digital wallet to obtain an identity and temporary AWS credentials to grant your front web application  access to the AWS services you need.
+You will learn how you can use [Amazon Cognito](https://aws.amazon.com/cognito/) to authenticate users using their digital wallet to obtain an identity and temporary AWS credentials to grant your front web application access to the AWS services you need.
 
-You will use an Amazon Cognito custom authentication challenge to ask users to sign a random message with their digital wallet. Amazon Cognito, by the way of [Lambda Triggers](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html), will validate if the signature is valid and will issue an ID token which proves that the user's wallet address has signed the given message with his digital wallet. 
+You will use an Amazon Cognito custom authentication challenge to ask users to sign a random message with their digital wallet. Amazon Cognito, by the way of [Lambda Triggers](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html), will validate if the signature is valid and will issue an ID token which proves that the user's wallet address has signed the given message with his digital wallet.
 
 You will also experiment with multiple ways to authorize access to [Amazon API Gateway](https://aws.amazon.com/api-gateway/) routes using Cognito Authorizers and [IAM Roles](https://docs.aws.amazon.com/cognito/latest/developerguide/iam-roles.html). You will also explore how to use Amazon Cognito IdentityPool to grant IAM Roles to authenticated and unauthenticated users thus securing your API to all users including anonymous users.
 
@@ -25,9 +25,8 @@ Finally, you will learn how to use API Gateway as proxy to third party Web3 APIs
 
 # Deployment
 
-First go to the `backend` folder, open the README there and deploy the architecture using [SAM](https://aws.amazon.com/serverless/sam/).
-
-Then go to the `dapp` folder, open the README there and run the dApp locally.
+1. Go to the `backend` folder, open the README there and deploy the architecture to AWS using [SAM](https://aws.amazon.com/serverless/sam/).
+2. Go to the `dapp` folder, open the README, run the dApp locally, and deploy it to AWS using the AWS CLI.
 
 # Inspiration
 
