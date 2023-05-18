@@ -29,6 +29,10 @@ If the signature is valid, Amazon Cognito will create a new identity in the Cogn
 
 We use [Amazon API Gateway](https://aws.amazon.com/api-gateway/) to proxy API calls to Alchemy and Moralis. API Gateway provides authorization capabilities and protects our Alchemy and Moralis API Keys. Those secret keys are never exposed on the frontend application. Two authentication methods are supported: [Cognito Authorizer](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-integrate-with-cognito.html) and [IAM Roles](https://docs.aws.amazon.com/apigateway/latest/developerguide/permissions.html) (Using [Amazon Cognito IdentityPool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html))
 
+# AWS Amplify Library
+
+Our dApp uses the [AWS Amplify open-source JavaScript client library](https://docs.amplify.aws/lib/q/platform/js/) to easily interact with our backend. It simplifies the sign up, sign in, and sign out workflow with our Amazon Cognito User Pool, see `/src/utils/user.js`. It also makes it easy to make HTTP requests to our Amazon API Gateway endpoint, see `/src/utils/api.js`.
+
 # Setup your environment
 
 Rename the `.env.example` file to `.env` and update the values there. Some values are referencing backend resources created earlier by SAM (see the `backend` README) and are visibile as output of the `sam deploy` command or in the `Output` tab of the Cloud Formation stack in the [AWS Console](console.aws.amazon.com).
