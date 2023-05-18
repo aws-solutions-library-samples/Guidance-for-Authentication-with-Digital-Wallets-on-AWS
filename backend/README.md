@@ -5,13 +5,14 @@ This folder contains the [AWS Serverless Application Model (SAM)](https://aws.am
 # Requirements
 
 1. AWS Account with proper IAM permissions in order to deploy the AWS resources listed in the `template.yaml` file.
+   - Don't have an AWS account? [Get started for free](https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-creating.html).
 2. AWS Serverless Application Model (SAM).
    - [AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) is a toolkit for building, testing, running and deploying serverless applications on AWS. It is compatible with [AWS CloudFormation](https://aws.amazon.com/cloudformation/). SAM generates a CloudFormation template and deploys it.
    - Ensure you have completed the [AWS SAM prerequistes](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/prerequisites.html).
    - [Install the AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html).
-3. [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/) accounts and API keys
-   - This project uses Alchemy and Moralis to fetch data from the blockchain
-   - Accounts and API Keys for those accounts are required and used throughout this project
+3. [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/) accounts and API keys.
+   - This project uses Alchemy and Moralis to fetch data from the blockchain.
+   - Accounts and API Keys for those accounts are required and used throughout this project.
 
 # Deployment
 
@@ -56,7 +57,7 @@ sam deploy --guided --stack-name NFTGallery --capabilities CAPABILITY_IAM CAPABI
 
 - 1 API Gateway
 - 1 Cognito User Pool to collect our user identities
-- 1 Cognito Identity Pool to obtain AWS temporary credentials
+- 1 Cognito Identity Pool to obtain temporary AWS credentials
 - 2 AWS IAM Roles to be used by the Amazon Cognito Identity Pool
 - 2 Lambda functions to serve as API Gateway integrations
 - 4 Lambda functions acting as Cognito Lambda triggers to manage Amazon Cognito authentication challenges
