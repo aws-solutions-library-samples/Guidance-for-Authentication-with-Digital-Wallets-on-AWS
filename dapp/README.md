@@ -1,7 +1,7 @@
 # NFT Gallery - dApp Guide
 
 This folder contains the code of the decentralized web application (dApp) which is a standard single page application (SPA) built using ReactJS, NextJS and TailwindCSS.
-It's called a dApp because it can interact with the blockchains directly using the users' digital wallets. 
+It's called a dApp because it can interact with the blockchains directly using the users' digital wallets.
 
 In our example though, we will not interact with the Ethereum blockchain directly. Instead we will use Web3 providers such as [Alchemy](https://www.alchemy.com/) and [Moralis](https://moralis.io/). 
 They provide standard HTTP APIs to eaily interact with the blockchain without developer knowledge or blockchain access.
@@ -18,16 +18,20 @@ They provide standard HTTP APIs to eaily interact with the blockchain without de
    - [MetaMask Chrome extension](https://metamask.io/)
    - [Brave Browser](https://brave.com/)
 
-# User Authentication and authorization
+# User authentication and authorization
 
 Any users of the dApp can lookup any NFT collections, even anonymous users. All other operations require users to be authenticated.
 
 Authentication is done using Amazon Cognito User Pool [custom authentication challenge](https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-lambda-challenge.html) orchestrated by a series of [AWS Lambda Triggers](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html).
 
 The custom challenge consists of asking users to sign a random message using their digital wallet private key.
-If the signature is valid, Amazon Cognito will create a new identity in the Cognito User Pool and will return a token.
+If the signature is valid, Amazon Cognito will create a new identity in the Cognito User Pool and will return a token. Our dApp uses this token to make authenticated requests to Amazon API Gateway.
 
-We use API Gateway to proxy API calls to Alchemy and Moralis. API Gateway provides authorization capabilities and protects our Alchemy and Moralis API Keys. Those secret keys are never exposed on the frontend application. Two authentication methods are supported: Cognito Authorizer and IAM Roles (Using Amazon Cognito IdentityPool)
+We use [Amazon API Gateway](https://aws.amazon.com/api-gateway/) to proxy API calls to Alchemy and Moralis. API Gateway provides authorization capabilities and protects our Alchemy and Moralis API Keys. Those secret keys are never exposed on the frontend application. Two authentication methods are supported: [Cognito Authorizer](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-integrate-with-cognito.html) and [IAM Roles](https://docs.aws.amazon.com/apigateway/latest/developerguide/permissions.html) (Using [Amazon Cognito IdentityPool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html))
+
+# AWS Amplify Library
+
+Our dApp uses the [AWS Amplify open-source JavaScript client library](https://docs.amplify.aws/lib/q/platform/js/) to easily interact with our backend. It simplifies the sign up, sign in, and sign out workflow with our Amazon Cognito User Pool, see `/src/utils/user.js`. It also makes it easy to make HTTP requests to our Amazon API Gateway endpoint, see `/src/utils/api.js`.
 
 # Setup your environment
 
@@ -93,7 +97,7 @@ aws s3 sync . s3://${BUCKET_NAME}
 ```
 
  - Where `${BUCKET_NAME}` is the name of the Amazon S3 Bucket created by the SAM template.
- - This will upload your static dapp website files from the `out` directory to your Amazon S3 bucket.
+ - This will upload your static dApp website files from the `out` directory to your Amazon S3 bucket.
 
 _Can't find your bucket name?_
 - You can list all your Amazon S3 buckets using the AWS CLI:
