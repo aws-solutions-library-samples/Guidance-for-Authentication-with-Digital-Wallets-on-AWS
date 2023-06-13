@@ -3269,10 +3269,10 @@
   resolved "https://registry.yarnpkg.com/@web3uikit/config/-/config-0.1.2.tgz#0f61701c094ce40269c59e61cb19d8326dba76ec"
   integrity sha512-fOY0jxen7nEfivZc7BKm63WRcNEncidFhk+dIVR/0bj4tt5Xl0xyomPgyQqe38d3/PJ3RvqVTdupWFbWNJULkA==
 
-"@web3uikit/icons@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@web3uikit/icons/-/icons-0.4.1.tgz#ce86a6200d6bb200c59494fe76cca3e6701f758a"
-  integrity sha512-ZvOgmTx8dB+ft75Gdb+2fkSAZ0yfyXAsot767i0T4NJ2gEiuFTJM5sXLyRzCMR82hhawEsGtktAGrsojFEs8mg==
+"@web3uikit/icons@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@web3uikit/icons/-/icons-1.1.2.tgz#eb87298904351f79601b9e45a09c6121ba3dc94b"
+  integrity sha512-ewoHjawkrcWf2INUsOYS5Oa1f106dMyCoLj2mmjWaZYsds3ZkyfwNzq+hb5xavYL3DMIayVqzsUzBXjNAg8NuA==
   dependencies:
     "@web3uikit/config" "*"
 
