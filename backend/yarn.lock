@@ -862,93 +862,102 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@moralisweb3/api-utils@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/api-utils/-/api-utils-2.14.2.tgz#991c501b15f495d48eaea2163e6a16047501d448"
-  integrity sha512-GCVG6ytEwJ8vavLoHFpr8+s/QGc5t78duwUbXtGC6Ffb0k6TEtS6XQLrgO2fBWimbpRWpp4pbXMMNFcHA/1O0w==
+"@moralisweb3/api-utils@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/api-utils/-/api-utils-2.22.2.tgz#bdce736807f709e0cff61d8b8411beb5f7ae3e1d"
+  integrity sha512-QFYNX0lYfDlB21knsR7dY0XJ2xTMdw4QRSvEH6xrwPR457M6rmhsiE2DFV7s3iwW6BTjQ6xJZpkxzCV2pDEFuQ==
   dependencies:
-    "@moralisweb3/common-core" "^2.14.2"
-    "@moralisweb3/common-evm-utils" "^2.14.2"
+    "@moralisweb3/common-core" "^2.22.2"
+    "@moralisweb3/common-evm-utils" "^2.22.2"
     axios "^1.2.1"
 
-"@moralisweb3/auth@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/auth/-/auth-2.14.2.tgz#171b6194a2436d906b3b01286cedb57bbbc5d1ba"
-  integrity sha512-CQ/vgH7JGjvJEKlJzeIJ+NxCK8zoTqo1TXsTE5t+ni/9Y5EOL00IISstJwoU1wNS55w8n3+dqKq7nvtg4kF4AA==
+"@moralisweb3/aptos-api@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/aptos-api/-/aptos-api-2.22.2.tgz#a036a7ff0faf1ac94cdfd421f3279ef38b36346d"
+  integrity sha512-t/Bz3wUC0veYQNtwRF+QJXtD6ZgrNjGFDZIHRt8HZLnNWNGzihuszHf3oqGEIDoZfcQXnSth7MHszqtaFNgfTg==
   dependencies:
-    "@moralisweb3/api-utils" "^2.14.2"
-    "@moralisweb3/common-aptos-utils" "^2.14.2"
-    "@moralisweb3/common-auth-utils" "^2.14.2"
-    "@moralisweb3/common-core" "^2.14.2"
-    "@moralisweb3/common-evm-utils" "^2.14.2"
-    "@moralisweb3/common-sol-utils" "^2.14.2"
+    "@moralisweb3/api-utils" "^2.22.2"
+    "@moralisweb3/common-aptos-utils" "^2.22.2"
+    "@moralisweb3/common-core" "^2.22.2"
 
-"@moralisweb3/common-aptos-utils@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/common-aptos-utils/-/common-aptos-utils-2.14.2.tgz#f49ce5d4f119b73fd287ddcd5857ebda0117e089"
-  integrity sha512-a/aWO82cNMDOb934MEQV85olAg6avR0ZY0v4NPNH7k950ldQTFLFeqdwritOWBKmNFaCr7ODbDZvmi7LIiCE5Q==
+"@moralisweb3/auth@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/auth/-/auth-2.22.2.tgz#e5d1e6d47cab3c84938169f444e04b535c75efea"
+  integrity sha512-Tv81yg5ettz6R+uIjBf8V3dfrJraBWkWyC7DaRS4l1XD79AHQyrAp8UzHIlP8OLE2n0lOiL4xMWieH2/0879Og==
   dependencies:
-    "@moralisweb3/common-core" "^2.14.2"
+    "@moralisweb3/api-utils" "^2.22.2"
+    "@moralisweb3/common-aptos-utils" "^2.22.2"
+    "@moralisweb3/common-auth-utils" "^2.22.2"
+    "@moralisweb3/common-core" "^2.22.2"
+    "@moralisweb3/common-evm-utils" "^2.22.2"
+    "@moralisweb3/common-sol-utils" "^2.22.2"
+
+"@moralisweb3/common-aptos-utils@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-aptos-utils/-/common-aptos-utils-2.22.2.tgz#bb939187e00c6209d90caa99ce3666be1ff73f22"
+  integrity sha512-MdPgUwqy/U5SSKqmrrCvo3oax/Ja+7U9ZNxZ+QgLr5OKtJ78VtSCsMjSiJkhmVtcwhal9faw+93mhx2k0zQQgA==
+  dependencies:
+    "@moralisweb3/common-core" "^2.22.2"
     "@noble/hashes" "^1.2.0"
 
-"@moralisweb3/common-auth-utils@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/common-auth-utils/-/common-auth-utils-2.14.2.tgz#c569298584d62446c49733115646e72f9ed98033"
-  integrity sha512-6dKc9xgNpPbEnX7EmUmUy4nWpJRaFXl6smOrE6De7PSlCXdJjkASeyW+EUOdq8oLjqlFua0lyCkNwPNiRMruag==
+"@moralisweb3/common-auth-utils@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-auth-utils/-/common-auth-utils-2.22.2.tgz#192b0803d4120a9d19dbd07ad846e561a303a8f1"
+  integrity sha512-bAOodLFaoMIZVNH25g+nRHNaxxhqWdik3vxvmeA5Mw04jZ+W2eT41o8PtqbtiuoYGdLnS95/kqQ93LbpY7iwAw==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
-    "@moralisweb3/common-aptos-utils" "^2.14.2"
-    "@moralisweb3/common-core" "^2.14.2"
-    "@moralisweb3/common-evm-utils" "^2.14.2"
-    "@moralisweb3/common-sol-utils" "^2.14.2"
+    "@moralisweb3/common-aptos-utils" "^2.22.2"
+    "@moralisweb3/common-core" "^2.22.2"
+    "@moralisweb3/common-evm-utils" "^2.22.2"
+    "@moralisweb3/common-sol-utils" "^2.22.2"
     "@moralisweb3/streams-typings" "^1.0.6"
 
-"@moralisweb3/common-core@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/common-core/-/common-core-2.14.2.tgz#f8f3c7b7d61eff4618b844d326e3d3df26f186fc"
-  integrity sha512-i6WIJhjoNsNpHpL61co1lJAEiw2Wbl4x+ghD4C9zO5RxA32npY4Y+KWvcBZ2EvxhHtMVKLOwq1/wUDvi7m4d+A==
+"@moralisweb3/common-core@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-core/-/common-core-2.22.2.tgz#55197ef9adb538d2811dc19b9c063a75d940ec4d"
+  integrity sha512-k6KD3RwjcJfWv7Go5i06hzDUR5QB/9uY73t4ys9B2B7vp8puO3hy1GDcbf/GxZ4gJyFbyyffCGish140vnVyzg==
   dependencies:
     axios "^1.2.1"
 
-"@moralisweb3/common-evm-utils@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/common-evm-utils/-/common-evm-utils-2.14.2.tgz#e76eaa3887b9936ddd446a70c880932750786986"
-  integrity sha512-m0QcR2NsphkCZNHgJJKUpkWtsnCbMgZ4jnZrvA5PbGY1W2lrNBak64KIvuKubDRDdf3lZQgYknRx9i6eMESHaQ==
+"@moralisweb3/common-evm-utils@^2.14.2", "@moralisweb3/common-evm-utils@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-evm-utils/-/common-evm-utils-2.22.2.tgz#502d881db32ce785b1a0e0f760a608feda01eaaf"
+  integrity sha512-P9EjsAHLUYoheeFNnivxrAa5cXzT8q+iHZEINCW8QUgTkLrDDeOqIgc+9Hb1JcHSFHUrqzEX6S7FKHJThQ2xFQ==
   dependencies:
     "@ethersproject/address" "^5.7.0"
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
-    "@moralisweb3/common-core" "^2.14.2"
+    "@moralisweb3/common-core" "^2.22.2"
 
-"@moralisweb3/common-sol-utils@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/common-sol-utils/-/common-sol-utils-2.14.2.tgz#7c982c9cc43abf963316e53b9aad674f529a4d14"
-  integrity sha512-3LRB1RxcBt0kkaYt6vVNngI/Po3e9CsMTXFhK6610U5rR1zmqXrigYpfh8W13MVvxXFQjHkHcpumKD4qDouC3g==
+"@moralisweb3/common-sol-utils@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-sol-utils/-/common-sol-utils-2.22.2.tgz#1f56dae72f6674a2c32f198903d08e7f53c74759"
+  integrity sha512-DxzDIEnHIknKFtnv8ocTsto9CcDa+j+T7OGEEQK8VHvKgEGjFrVv42Z4pt4CKVY4sG0xzbKh99M32jRraL/+5w==
   dependencies:
-    "@moralisweb3/common-core" "^2.14.2"
+    "@moralisweb3/common-core" "^2.22.2"
     bn.js "^5.2.1"
     bs58 "^5.0.0"
     buffer "^6.0.3"
 
-"@moralisweb3/common-streams-utils@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/common-streams-utils/-/common-streams-utils-2.14.2.tgz#af067a90f0a7f86a1f61e406118a04831f6d4933"
-  integrity sha512-nmDRPKg816QMHwniQbdPO6W9jiZn2wbqM+40yeHdOx943FoCB9TOFp/W8SR1B+FgcKJeSiocZiv4GsQ8z3sqgA==
+"@moralisweb3/common-streams-utils@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-streams-utils/-/common-streams-utils-2.22.2.tgz#2201cf961cef1832c84e3779b4c8b7cb7d55e309"
+  integrity sha512-OzudOK5TycLcSsUybbYkI38M0w8/rlcpddW0lZhUt+Riy72AMfOXL13dsqthqff8NA35nzn+72Ltnwe2x1copw==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
-    "@moralisweb3/common-aptos-utils" "^2.14.2"
-    "@moralisweb3/common-core" "^2.14.2"
-    "@moralisweb3/common-evm-utils" "^2.14.2"
-    "@moralisweb3/streams-typings" "^1.0.6"
+    "@moralisweb3/common-aptos-utils" "^2.22.2"
+    "@moralisweb3/common-core" "^2.22.2"
+    "@moralisweb3/common-evm-utils" "^2.22.2"
+    "@moralisweb3/streams-typings" "^1.0.7"
 
-"@moralisweb3/evm-api@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/evm-api/-/evm-api-2.14.2.tgz#f67bf04a49e99c6a943de290a05b9ba4580ceb1b"
-  integrity sha512-sWcaAz60/pm86QukgjSjSGP5BW5Ph23cZWvQXkuFELRI/o/tJYA+31odMjlWimh7xKza1TTK4jOWbKF3HaMxFg==
+"@moralisweb3/evm-api@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/evm-api/-/evm-api-2.22.2.tgz#a6b4aebc35da93d3224f3d19208abbe3679c71dd"
+  integrity sha512-XwUqi08dNXsZ6bxEnIMbQSleQ+EGNQ6UduXoRi9tWPLP2acX3Pgs4LHfTL+3rBwNqRHOsY7dyucjmuLPXUUDdA==
   dependencies:
-    "@moralisweb3/api-utils" "^2.14.2"
-    "@moralisweb3/common-core" "^2.14.2"
-    "@moralisweb3/common-evm-utils" "^2.14.2"
+    "@moralisweb3/api-utils" "^2.22.2"
+    "@moralisweb3/common-core" "^2.22.2"
+    "@moralisweb3/common-evm-utils" "^2.22.2"
 
 "@moralisweb3/evm-utils@^2.14.1":
   version "2.14.2"
@@ -957,34 +966,34 @@
   dependencies:
     "@moralisweb3/common-evm-utils" "^2.14.2"
 
-"@moralisweb3/sol-api@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/sol-api/-/sol-api-2.14.2.tgz#8f1f066e02ecc2796e36c8847c5d69c6d6c89858"
-  integrity sha512-KkvJz7LUM+MHbkBNPlAsFHn21FxiAi+h/HryiWFp27ZfgtxJKNqGhJtwLaGGQmTy0izExHzNb7GKZWaQx9HEdA==
+"@moralisweb3/sol-api@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/sol-api/-/sol-api-2.22.2.tgz#615f100f83f94728f7850e02b47274929cf766f5"
+  integrity sha512-18ytQUGOOZ2fwEwuFyUdpS6ziz0vxmbxJz0ZTohS12vVT5cBfnLbTG3HW9ea1oOsGMYxhIJUWOAUvdO2FypmMw==
   dependencies:
-    "@moralisweb3/api-utils" "^2.14.2"
-    "@moralisweb3/common-core" "^2.14.2"
-    "@moralisweb3/common-sol-utils" "^2.14.2"
+    "@moralisweb3/api-utils" "^2.22.2"
+    "@moralisweb3/common-core" "^2.22.2"
+    "@moralisweb3/common-sol-utils" "^2.22.2"
 
-"@moralisweb3/streams-typings@^1.0.6":
+"@moralisweb3/streams-typings@^1.0.6", "@moralisweb3/streams-typings@^1.0.7":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@moralisweb3/streams-typings/-/streams-typings-1.0.7.tgz#d8bec1f874f4a1db2f628bd389cd89a4d5736c09"
   integrity sha512-ShbVqil0KLOTyTjO6z9JewPcVVE3S6kzkQFnW2flGBRsGdKucpkUdOx1HijOLoaikz/9gH92n+lzTvRFIj0AoA==
 
-"@moralisweb3/streams@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/streams/-/streams-2.14.2.tgz#b3e136103337797eb95d70d2f428ebf26742f477"
-  integrity sha512-3P6sh++0krqkbZNN/5hjIanBZ0cvZ2JWJtjOW1m+Otaxj4TBhbsL5x4YecZcrLaX8v8ixD0w2UpKYAVl7x7lpw==
+"@moralisweb3/streams@^2.22.2":
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/streams/-/streams-2.22.2.tgz#399f68e86bba269fe743eef2761909547847ed0d"
+  integrity sha512-Iha+wNptJ2L3QCHB0N7xZld3XsfrmJ+sO7v47dfQomUE7ezs7ivBp7Dw9lIC5JEOp8tdXnzlxYbTSSa68wdP/g==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/bignumber" "^5.7.0"
     "@ethersproject/sha2" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
-    "@moralisweb3/api-utils" "^2.14.2"
-    "@moralisweb3/common-core" "^2.14.2"
-    "@moralisweb3/common-evm-utils" "^2.14.2"
-    "@moralisweb3/common-streams-utils" "^2.14.2"
-    "@moralisweb3/streams-typings" "^1.0.6"
+    "@moralisweb3/api-utils" "^2.22.2"
+    "@moralisweb3/common-core" "^2.22.2"
+    "@moralisweb3/common-evm-utils" "^2.22.2"
+    "@moralisweb3/common-streams-utils" "^2.22.2"
+    "@moralisweb3/streams-typings" "^1.0.7"
     ethereumjs-util "^7.1.0"
     web3-eth-abi "^1.8.0"
 
@@ -3339,22 +3348,24 @@ mixin-deep@^1.2.0:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
 
-moralis@^2.14.1:
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/moralis/-/moralis-2.14.2.tgz#316f1863d1d73f690f3186315ba27b4ce86234ec"
-  integrity sha512-xopdT7WuoOX9aac6kRDjOrPViKuudea8aiZEUr3cNU5QecS8WlQCHGS10ikZBbS5gzEf56bdoDTDrs6HziciNA==
+moralis@^2.22.2:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moralis/-/moralis-2.22.2.tgz#f309fba5f5622b3f282a9f2bf5f30f7fc84903b3"
+  integrity sha512-7HfsfYuSSbNOVvG3+DbiZ/+8aCPx2SWiwFpmz1iXNaq726GSJPWXFd5TI/40A5/ZzlwzfB6u9SWPSh1Xy8XVsA==
   dependencies:
-    "@moralisweb3/api-utils" "^2.14.2"
-    "@moralisweb3/auth" "^2.14.2"
-    "@moralisweb3/common-auth-utils" "^2.14.2"
-    "@moralisweb3/common-core" "^2.14.2"
-    "@moralisweb3/common-evm-utils" "^2.14.2"
-    "@moralisweb3/common-sol-utils" "^2.14.2"
-    "@moralisweb3/common-streams-utils" "^2.14.2"
-    "@moralisweb3/evm-api" "^2.14.2"
-    "@moralisweb3/sol-api" "^2.14.2"
-    "@moralisweb3/streams" "^2.14.2"
-    "@moralisweb3/streams-typings" "^1.0.6"
+    "@moralisweb3/api-utils" "^2.22.2"
+    "@moralisweb3/aptos-api" "^2.22.2"
+    "@moralisweb3/auth" "^2.22.2"
+    "@moralisweb3/common-aptos-utils" "^2.22.2"
+    "@moralisweb3/common-auth-utils" "^2.22.2"
+    "@moralisweb3/common-core" "^2.22.2"
+    "@moralisweb3/common-evm-utils" "^2.22.2"
+    "@moralisweb3/common-sol-utils" "^2.22.2"
+    "@moralisweb3/common-streams-utils" "^2.22.2"
+    "@moralisweb3/evm-api" "^2.22.2"
+    "@moralisweb3/sol-api" "^2.22.2"
+    "@moralisweb3/streams" "^2.22.2"
+    "@moralisweb3/streams-typings" "^1.0.7"
 
 ms@2.0.0:
   version "2.0.0"
