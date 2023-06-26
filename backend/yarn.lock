@@ -1164,10 +1164,10 @@ agent-base@6:
   dependencies:
     debug "4"
 
-alchemy-sdk@^2.4.3:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/alchemy-sdk/-/alchemy-sdk-2.4.3.tgz#3993c3098cc92f45ca461bcaabd72d0859751de4"
-  integrity sha512-VKzkeJT7pDIxMmdoSNKSw85Z8IFC2v3AtE1oDpSrNyhCT81vSnOx1Q6k6IHjg8LRIHVkGQMM9yk/AkTJEdce5w==
+alchemy-sdk@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/alchemy-sdk/-/alchemy-sdk-2.9.1.tgz#0dd5356eb91a4663a23822874972568ede8a5ba7"
+  integrity sha512-P5f8p8Kwzx/fZTvrPuerZ8NNl5TS+uzE2vW42EBP+Vk5QJofgVa2nEu10K603I4rQjruOVZ08MB1KtOJ/yoH6g==
   dependencies:
     "@ethersproject/abi" "^5.7.0"
     "@ethersproject/abstract-provider" "^5.7.0"
