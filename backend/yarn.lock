@@ -910,15 +910,22 @@
   dependencies:
     axios "^1.2.1"
 
-"@moralisweb3/common-evm-utils@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/common-evm-utils/-/common-evm-utils-2.14.2.tgz#e76eaa3887b9936ddd446a70c880932750786986"
-  integrity sha512-m0QcR2NsphkCZNHgJJKUpkWtsnCbMgZ4jnZrvA5PbGY1W2lrNBak64KIvuKubDRDdf3lZQgYknRx9i6eMESHaQ==
+"@moralisweb3/common-core@^2.22.3":
+  version "2.22.3"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-core/-/common-core-2.22.3.tgz#2d5aa4170063148450ecc8af5c92c7bc8742cf0f"
+  integrity sha512-yEsxZQXmzwQTFfKpI2NzuUf6z41IG8o81JsO65zELu9oyIdBwhqu4XAcjHpfNhNhN6oB2Q2zbyp3Y9W5R5ahQQ==
+  dependencies:
+    axios "^1.2.1"
+
+"@moralisweb3/common-evm-utils@^2.14.2", "@moralisweb3/common-evm-utils@^2.22.3":
+  version "2.22.3"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-evm-utils/-/common-evm-utils-2.22.3.tgz#b6d16bbb46a91cedff2ea4559613d392d1dc6080"
+  integrity sha512-ksri/8Kbv41gD6O4INcA82ZygJSeJfg3O8nb1Ir9wKer3E+reElrNVjNWGEh9ZOISDmXpdZ0JXAK36EWgJnO7w==
   dependencies:
     "@ethersproject/address" "^5.7.0"
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
-    "@moralisweb3/common-core" "^2.14.2"
+    "@moralisweb3/common-core" "^2.22.3"
 
 "@moralisweb3/common-sol-utils@^2.14.2":
   version "2.14.2"
@@ -950,12 +957,12 @@
     "@moralisweb3/common-core" "^2.14.2"
     "@moralisweb3/common-evm-utils" "^2.14.2"
 
-"@moralisweb3/evm-utils@^2.14.1":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/evm-utils/-/evm-utils-2.14.2.tgz#ee031d999910f2101422525b5049826a8687028d"
-  integrity sha512-1she78/55NUgemqz/SNPVgiVBjdz/aCdzyALPwHzuip/b55g4hipnnh+2rbZFV/AtOg66eQwSgF3/9d+JrV+BA==
+"@moralisweb3/evm-utils@^2.22.3":
+  version "2.22.3"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/evm-utils/-/evm-utils-2.22.3.tgz#b0475a0c8e6af6f742f13bc24d273f75cb24cc49"
+  integrity sha512-1x+dg5XlLh/dfYA+hAevMER4hrGpN+uy3y3nK+FdEIrnFKcY8sTLpUmaSNkglN4ZmhQJegERgVcH+EJb7xYcwg==
   dependencies:
-    "@moralisweb3/common-evm-utils" "^2.14.2"
+    "@moralisweb3/common-evm-utils" "^2.22.3"
 
 "@moralisweb3/sol-api@^2.14.2":
   version "2.14.2"
