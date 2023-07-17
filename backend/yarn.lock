@@ -910,15 +910,22 @@
   dependencies:
     axios "^1.2.1"
 
-"@moralisweb3/common-evm-utils@^2.14.2":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/common-evm-utils/-/common-evm-utils-2.14.2.tgz#e76eaa3887b9936ddd446a70c880932750786986"
-  integrity sha512-m0QcR2NsphkCZNHgJJKUpkWtsnCbMgZ4jnZrvA5PbGY1W2lrNBak64KIvuKubDRDdf3lZQgYknRx9i6eMESHaQ==
+"@moralisweb3/common-core@^2.22.4":
+  version "2.22.4"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-core/-/common-core-2.22.4.tgz#2ce2d0910ace1643de1e13a902670152065ba300"
+  integrity sha512-E/gsjutGYHs28tTJPDppO2Zw5WKWdQiBHVjYtT8RfV+p7TD5rxmaK1kAdvj1cP2JZAbhW8K41OGBm+ekyzR/2w==
+  dependencies:
+    axios "^1.2.1"
+
+"@moralisweb3/common-evm-utils@^2.14.2", "@moralisweb3/common-evm-utils@^2.22.4":
+  version "2.22.4"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-evm-utils/-/common-evm-utils-2.22.4.tgz#655f574b074c41b9e826b70f48e73e82d5dfc3a9"
+  integrity sha512-hghNO3xksq6TmDgbwoURTzir7h/Ipg/8DlZa/6kb5/fDvGR9kyY+HbKcQyVNGc9PoykQO1BSEv1LLq47BD8w1w==
   dependencies:
     "@ethersproject/address" "^5.7.0"
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
-    "@moralisweb3/common-core" "^2.14.2"
+    "@moralisweb3/common-core" "^2.22.4"
 
 "@moralisweb3/common-sol-utils@^2.14.2":
   version "2.14.2"
@@ -950,12 +957,12 @@
     "@moralisweb3/common-core" "^2.14.2"
     "@moralisweb3/common-evm-utils" "^2.14.2"
 
-"@moralisweb3/evm-utils@^2.14.1":
-  version "2.14.2"
-  resolved "https://registry.yarnpkg.com/@moralisweb3/evm-utils/-/evm-utils-2.14.2.tgz#ee031d999910f2101422525b5049826a8687028d"
-  integrity sha512-1she78/55NUgemqz/SNPVgiVBjdz/aCdzyALPwHzuip/b55g4hipnnh+2rbZFV/AtOg66eQwSgF3/9d+JrV+BA==
+"@moralisweb3/evm-utils@^2.22.4":
+  version "2.22.4"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/evm-utils/-/evm-utils-2.22.4.tgz#e012b025068058a1744225effe874b05c66361d5"
+  integrity sha512-9dkmov5UFGxTpaMxviM8N/YEx8yMCrmQtdbh6Z1yxDo2qOD8YsfM91er10nIGKdJ14yaYrRN3MD8eZD6kMgeRQ==
   dependencies:
-    "@moralisweb3/common-evm-utils" "^2.14.2"
+    "@moralisweb3/common-evm-utils" "^2.22.4"
 
 "@moralisweb3/sol-api@^2.14.2":
   version "2.14.2"
