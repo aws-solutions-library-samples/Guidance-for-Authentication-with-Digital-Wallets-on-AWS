@@ -10,7 +10,7 @@
     "lint:fix": "next lint --fix"
   },
   "dependencies": {
-    "@web3uikit/icons": "^0.4.1",
+    "@web3uikit/icons": "^1.1.2",
     "autoprefixer": "^10.4.14",
     "aws-amplify": "^5.3.5",
     "ethers": "^5.7.2",
@@ -22,7 +22,7 @@
     "wagmi": "^0.6.8"
   },
   "devDependencies": {
-    "eslint": "8.39.0",
+    "eslint": "8.45.0",
     "eslint-config-next": "13.3.1",
     "eslint-plugin-unused-imports": "^2.0.0"
   }
