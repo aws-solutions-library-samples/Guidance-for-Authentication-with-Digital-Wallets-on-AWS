@@ -1,20 +1,20 @@
 {
-    "name": "Web3Gallery",
-    "description": "Dependencies for the Lambdas deployed by SAM",
-    "version": "0.0.1",
-    "private": true,
-    "type": "module",
-    "dependencies": {
-        "@moralisweb3/evm-utils": "^2.14.1",
-        "alchemy-sdk": "^2.4.3",
-        "ethers": "^5.7.1",
-        "moralis": "^2.14.1",
-        "node-fetch": "^3.3.0"
-    },
-    "devDependencies": {
-        "jest": "^26.6.3"
-    },
-    "scripts": {
-        "test": "jest"
-    }
+  "name": "Web3Gallery",
+  "description": "Dependencies for the Lambdas deployed by SAM",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@moralisweb3/evm-utils": "^2.22.4",
+    "alchemy-sdk": "^2.4.3",
+    "ethers": "^5.7.1",
+    "moralis": "^2.22.4",
+    "node-fetch": "^3.3.1"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  },
+  "scripts": {
+    "test": "jest"
+  }
 }
