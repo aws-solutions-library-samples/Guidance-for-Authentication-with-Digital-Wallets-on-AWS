@@ -7,7 +7,7 @@
   "dependencies": {
     "@moralisweb3/evm-utils": "^2.22.4",
     "alchemy-sdk": "^2.4.3",
-    "ethers": "^5.7.1",
+    "ethers": "^6.9.0",
     "moralis": "^2.22.4",
     "node-fetch": "^3.3.1"
   },
