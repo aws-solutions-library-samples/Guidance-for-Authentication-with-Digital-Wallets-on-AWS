@@ -727,7 +727,7 @@ Resources:
     Properties:
       DistributionConfig:
         Origins:
-          - DomainName: !GetAtt WebhostS3Bucket.DomainName
+          - DomainName: !GetAtt WebhostS3Bucket.RegionalDomainName
             Id: s3-webhost
             OriginAccessControlId: !GetAtt CloudFrontOriginAccessControl.Id
             S3OriginConfig:
