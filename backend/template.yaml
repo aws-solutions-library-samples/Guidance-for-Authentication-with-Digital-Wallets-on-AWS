@@ -280,7 +280,7 @@ Resources:
         Uri: !Join
           - "/"
           - - !Ref AlchemyEthUrl
-            - getNFTs
+            - getNFTsForOwner
         # Here we override the querystring parameter 'owner' to inject the user's wallet address
         RequestTemplates:
           application/json: |

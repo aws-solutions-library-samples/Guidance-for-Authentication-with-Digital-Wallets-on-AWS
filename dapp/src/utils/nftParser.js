@@ -78,10 +78,10 @@ export const processAlchemyNfts = (apiResult) => {
   const nfts = alchemyNfts.map((alchemyNft) => {
     return {
       id: alchemyNft.id?.tokenId,
-      title: alchemyNft.title,
+      title: alchemyNft.name,
       description: alchemyNft.description,
-      thumbnail: alchemyNft.media[0]?.thumbnail,
-      image: alchemyNft.media[0]?.gateway,
+      thumbnail: alchemyNft.image?.thumbnailUrl,
+      image: alchemyNft.image?.cachedUrl,
       contractType: alchemyNft.contractMetadata
         ? alchemyNft.contractMetadata.tokenType
         : alchemyNft.contract.tokenType,
@@ -91,6 +91,8 @@ export const processAlchemyNfts = (apiResult) => {
       amount: alchemyNft.balance,
     };
   });
+
+  console.log(nfts);
 
   return getNftCards(nfts);
 };
