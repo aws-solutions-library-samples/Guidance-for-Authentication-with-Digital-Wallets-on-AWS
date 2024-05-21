@@ -743,7 +743,7 @@ Resources:
             Cookies:
               Forward: none
             QueryString: false
-          ViewerProtocolPolicy: allow-all
+          ViewerProtocolPolicy: redirect-to-https
           AllowedMethods:
             - GET
             - HEAD
