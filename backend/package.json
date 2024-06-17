@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@moralisweb3/evm-utils": "^2.25.4",
+    "@moralisweb3/evm-utils": "^2.26.4",
     "alchemy-sdk": "^3.2.1",
     "ethers": "^5.7.1",
     "moralis": "^2.25.4",
